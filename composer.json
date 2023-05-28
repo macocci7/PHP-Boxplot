@@ -1,0 +1,24 @@
+{
+    "name": "macocci7/php-boxplot",
+    "version": "1.0.0",
+    "description": "it's easy to use for creating boxplots.",
+    "type": "library",
+    "require": {
+        "intervention/image": "^2.7",
+        "macocci7/php-frequency-table": "1.0.5",
+        "fakerphp/faker": "^1.22"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Macocci7\\PhpBoxplot\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "macocci7",
+            "email": "macocci7@yahoo.co.jp"
+        }
+    ],
+    "minimum-stability": "stable"
+}
