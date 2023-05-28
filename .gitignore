@@ -3,7 +3,6 @@
 /.phpunit.cache
 .phpunit.result.cache
 /tools
-/example
 
 # Logs
 logs
