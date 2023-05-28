@@ -49,7 +49,19 @@ composer require macocci7/php-boxplot
     
 ## Example
 
-preparing.
+- [BoxplotExample.php](example/BoxplotExample.php) >> results in:
+
+    ![BoxplotExample.png](example/img/BoxplotExample.png)
+
+- [DetmersReidBoxplot2023.php](example/DetmersReidBoxplot2023.php) >> results in:
+
+    ![BoxplotDetmersReid2023_01.png](example/img/BoxplotDetmersReid2023_01.png)
+
+    ![BoxplotDetmersReid2023_02.png](example/img/BoxplotDetmersReid2023_02.png)
+
+- [BoxplotExampleCase.php](example/BoxplotExampleCase.php) >> results in:
+
+    ![BoxplotExampleCase.png](example/img/BoxplotExampleCase.png)
 
 ## License
 
