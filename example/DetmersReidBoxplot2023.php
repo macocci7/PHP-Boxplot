@@ -29,9 +29,7 @@ $bp
    ->meanOn()
    ->outlierOn()
    ->jitterOn()
-   ->create()
-   ->save($filePath01)
+   ->create($filePath01)
    ->outlierOff()
    ->jitterOff()
-   ->create()
-   ->save($filePath02);
+   ->create($filePath02);

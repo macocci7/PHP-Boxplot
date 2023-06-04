@@ -46,5 +46,4 @@ $bp->setDataset($dataset)
    ->setLabelY('Value')
    ->setCaption('Random Data')
    ->setLegends($players)
-   ->create()
-   ->save($filePath);
+   ->create($filePath);
