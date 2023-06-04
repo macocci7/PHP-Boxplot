@@ -22,10 +22,10 @@ $filePath02 = 'img/BoxplotDetmersReid2023_02.png';
 
 $bp
    ->setData($dailyData)
-   ->setLabels($labels)
-   ->setLabelX('Game Date')
-   ->setLabelY('MPH')
-   ->setCaption('Release Speed: Detmers, Reid')
+   ->labels($labels)
+   ->labelX('Game Date')
+   ->labelY('MPH')
+   ->caption('Release Speed: Detmers, Reid')
    ->meanOn()
    ->outlierOn()
    ->jitterOn()

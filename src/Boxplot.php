@@ -118,7 +118,7 @@ class Boxplot
         $this->pixHeightPitch = $this->canvasHeight * $this->frameYRatio / ($this->gridMax - $this->gridMin);
         // Note:
         // - If $this->gridHeightPitch has a value, that value takes precedence.
-        // - The value of $this->girdHeightPitch may be set by the funciton setGridHeightPitch().
+        // - The value of $this->girdHeightPitch may be set by the funciton gridHeightPitch().
         if (!$this->gridHeightPitch) {
             $this->gridHeightPitch = 1;
             if ($this->gridHeightPitch < 0.125 * $gridHeightSpan)
@@ -131,13 +131,12 @@ class Boxplot
         $this->image = Image::canvas($this->canvasWidth, $this->canvasHeight, $this->canvasBackgroundColor);
         // Note:
         // - If $this->labels has values, those values takes precedence.
-        // - The values of $this->labels may be set by the function setLabels().
-        //if (empty($this->labels)) $this->labels = array_keys(array_fill(0, $this->boxCount, 0));
+        // - The values of $this->labels may be set by the function labels().
         if (empty($this->labels)) $this->labels = array_keys($this->data[0]);
         return $this;
     }
 
-    public function setLimit($lower, $upper)
+    public function limit($lower, $upper)
     {
         if (!is_int($lower) && !s_float($lower)) return;
         if (!is_int($upper) && !is_float($upper)) return;
@@ -161,7 +160,7 @@ class Boxplot
         return $this;
     }
 
-    public function setGridHeightPitch($pitch)
+    public function gridHeightPitch($pitch)
     {
         if (!is_int($pitch) && !is_float($pitch)) return;
         if ($pitch <= 0) return;
@@ -169,7 +168,7 @@ class Boxplot
         return $this;
     }
 
-    public function setSize($width, $height)
+    public function resize($width, $height)
     {
         if (!is_int($width) || !is_int($height)) return;
         if ($width < 100 || $height < 100) return;
@@ -178,7 +177,7 @@ class Boxplot
         return $this;
     }
 
-    public function setBoxWidth($width)
+    public function boxWidth($width)
     {
         if (!is_int($width)) return;
         if ($width < $this->boxBorderWidth * 2 + 1) return;
@@ -186,14 +185,14 @@ class Boxplot
         return $this;
     }
 
-    public function setBoxBacground($colors)
+    public function boxBackground($colors)
     {
         if (!is_array($colors)) return;
         $this->boxBackgroundColor = $colors;
         return $this;
     }
 
-    public function setLabels($labels)
+    public function labels($labels)
     {
         if (!is_array($labels)) return;
         $this->label = [];
@@ -203,28 +202,28 @@ class Boxplot
         return $this;
     }
 
-    public function setLabelX($label)
+    public function labelX($label)
     {
         if (!is_string($label)) return;
         $this->labelX = $label;
         return $this;
     }
 
-    public function setLabelY($label)
+    public function labelY($label)
     {
         if (!is_string($label)) return;
         $this->labelY = $label;
         return $this;
     }
 
-    public function setCaption($caption)
+    public function caption($caption)
     {
         if (!is_string($caption)) return;
         $this->caption = $caption;
         return $this;
     }
 
-    public function setLegends($legends)
+    public function legends($legends)
     {
         if (!is_array($legends)) return;
         $this->legends = $legends;
@@ -330,7 +329,7 @@ class Boxplot
         return $outliers;
     }
 
-    public function setAxis()
+    public function plotAxis()
     {
         // Horizontal Axis
         $x1 = (int) $this->baseX;
@@ -353,7 +352,7 @@ class Boxplot
         return $this;
     }
 
-    public function setGrids()
+    public function plotGrids()
     {
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
             $x1 = (int) $this->baseX;
@@ -365,11 +364,11 @@ class Boxplot
                 $draw->width($this->gridWidth);
             });
         }
-        $this->setGridVertical();
+        $this->plotGridVertical();
         return $this;
     }
 
-    public function setGridVertical()
+    public function plotGridVertical()
     {
         if (!$this->gridVertical) return;
         for ($i = 1; $i <= $this->boxCount; $i++) {
@@ -385,7 +384,7 @@ class Boxplot
         return $this;
     }
 
-    public function setGridValues()
+    public function plotGridValues()
     {
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
             $x1 = (int) ($this->baseX - $this->fontSize * 1.1);
@@ -681,8 +680,8 @@ class Boxplot
         $this->setProperties();
         if (!is_array($this->data)) return false;
         if (empty($this->data)) return false;
-        $this->setGrids();
-        $this->setGridValues();
+        $this->plotGrids();
+        $this->plotGridValues();
         foreach ($this->data as $legend => $data) {
             $index = 0;
             foreach ($data as $key => $values) {
@@ -692,7 +691,7 @@ class Boxplot
                 $index++;
             }
         }
-        $this->setAxis();
+        $this->plotAxis();
         $this->plotLabels();
         $this->plotLabelX();
         $this->plotLabelY();
