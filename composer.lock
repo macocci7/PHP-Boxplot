@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ef5effd6f2d18337d83e59206953c2be",
+    "content-hash": "a66640a3d7a30c2c7f3d7d6b816d5c43",
     "packages": [
         {
             "name": "fakerphp/faker",
@@ -276,16 +276,16 @@
         },
         {
             "name": "macocci7/php-frequency-table",
-            "version": "1.0.5",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/macocci7/PHP-FrequencyTable.git",
-                "reference": "fb65f48ac943efe4ce50589202e877ccb6b85f15"
+                "reference": "67ea577c6a27fafdea555d0f6756522f82fd3d43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/macocci7/PHP-FrequencyTable/zipball/fb65f48ac943efe4ce50589202e877ccb6b85f15",
-                "reference": "fb65f48ac943efe4ce50589202e877ccb6b85f15",
+                "url": "https://api.github.com/repos/macocci7/PHP-FrequencyTable/zipball/67ea577c6a27fafdea555d0f6756522f82fd3d43",
+                "reference": "67ea577c6a27fafdea555d0f6756522f82fd3d43",
                 "shasum": ""
             },
             "type": "library",
@@ -307,9 +307,9 @@
             "description": "it's easy to use for creating frequency distribution tables.",
             "support": {
                 "issues": "https://github.com/macocci7/PHP-FrequencyTable/issues",
-                "source": "https://github.com/macocci7/PHP-FrequencyTable/tree/1.0.5"
+                "source": "https://github.com/macocci7/PHP-FrequencyTable/tree/1.1.3"
             },
-            "time": "2023-05-27T12:57:05+00:00"
+            "time": "2023-06-03T05:21:47+00:00"
         },
         {
             "name": "psr/container",
@@ -518,16 +518,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v3.2.1",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e"
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
                 "shasum": ""
             },
             "require": {
@@ -536,7 +536,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.3-dev"
+                    "dev-main": "3.4-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -565,7 +565,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.3.0"
             },
             "funding": [
                 {
@@ -581,7 +581,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-01T10:25:55+00:00"
+            "time": "2023-05-23T14:45:45+00:00"
         }
     ],
     "packages-dev": [],

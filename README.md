@@ -32,14 +32,14 @@ composer require macocci7/php-boxplot
     $bp = new Boxplot();
 
     $bp->setData($data)
-        ->setLimit(0, 100)
-        ->setGridHeightPitch(10)
+        ->limit(0, 100)
+        ->gridHeightPitch(10)
         ->gridVerticalOn()
         ->outlierOn()
         ->meanOn()
-        ->setLabelX('Examination')
-        ->setLabelY('Score')
-        ->setCaption('Results in 2022')
+        ->labelX('Examination')
+        ->labelY('Score')
+        ->caption('Results in 2022')
         ->create('img/BoxplotExample.png');
     ```
 - Result
