@@ -674,8 +674,10 @@ class Boxplot
         return $this;
     }
 
-    public function create()
+    public function create($filePath)
     {
+        if (!is_string($filePath)) return false;
+        if (!(strlen($filePath)>0)) return false;
         $this->setProperties();
         if (!is_array($this->data)) return false;
         if (empty($this->data)) return false;
@@ -696,13 +698,6 @@ class Boxplot
         $this->plotLabelY();
         $this->plotCaption();
         $this->plotLegend();
-        return $this;
-    }
-
-    public function save($filePath)
-    {
-        if (!is_string($filePath)) return false;
-        if (!(strlen($filePath)>0)) return false;
         $this->image->save($filePath);
         return $this;
     }
