@@ -22,5 +22,4 @@ $bp->setData($data)
    ->setLabelX('Examination')
    ->setLabelY('Score')
    ->setCaption('Results in 2022')
-   ->create()
-   ->save('img/BoxplotExample.png');
+   ->create('img/BoxplotExample.png');
