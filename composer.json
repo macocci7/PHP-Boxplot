@@ -1,6 +1,6 @@
 {
     "name": "macocci7/php-boxplot",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "it's easy to use for creating boxplots.",
     "type": "library",
     "require": {

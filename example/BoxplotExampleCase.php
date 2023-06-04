@@ -21,10 +21,10 @@ $players = [
 ];
 $dataset = [];
 foreach ($players as $playre => $name) {
-    $waightP = $faker->numberBetween(7, 13) * 10 / 100;
+    $waightP = $faker->numberBetween(7, 13) / 10;
     $data = [];
     foreach ($keys as $index => $key) {
-        $waightD = $faker->numberBetween(7, 13) * 10 / 100;
+        $waightD = $faker->numberBetween(7, 13) / 10;
         $data[$index] = [];
         for ($i = 0; $i < $faker->numberBetween(50, 600); $i++) {
             $data[$index][] = $waightD * $waightP * $faker->numberBetween(600, 1100) / 100;
@@ -37,7 +37,7 @@ $bp->setDataset($dataset)
    ->boxWidth(20)
    ->gridVerticalOn()
    ->outlierOn()
-   ->jitterOn()
+   ->jitterOff()
    ->meanOn()
    ->legendOn()
    ->gridHeightPitch(2)
