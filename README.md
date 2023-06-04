@@ -40,8 +40,7 @@ composer require macocci7/php-boxplot
         ->setLabelX('Examination')
         ->setLabelY('Score')
         ->setCaption('Results in 2022')
-        ->create()
-        ->save('img/BoxplotExample.png');
+        ->create('img/BoxplotExample.png');
     ```
 - Result
 
@@ -68,6 +67,7 @@ composer require macocci7/php-boxplot
 [MIT](LICENSE)
 
 *Document created: 2023/05/28*
-*Document updated: 2023/05/28*
+
+*Document updated: 2023/06/04*
 
 Copyright 2023 macocci7
