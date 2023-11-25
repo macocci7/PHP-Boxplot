@@ -1,4 +1,5 @@
 <?php
+
 require('../vendor/autoload.php');
 
 use Macocci7\PhpBoxplot\Boxplot;
@@ -14,12 +15,15 @@ $keys = [
     '5/24',
     '5/25',
 ];
+
 $players = [
     'John',
     'Jake',
     'Hugo',
 ];
+
 $dataset = [];
+
 foreach ($players as $playre => $name) {
     $waightP = $faker->numberBetween(7, 13) / 10;
     $data = [];
@@ -32,9 +36,17 @@ foreach ($players as $playre => $name) {
     }
     $dataset[] = $data;
 }
+
 $bp->setDataset($dataset)
    ->resize(600, 400)
+   ->bgcolor('#333399')
+   ->fontColor('#cccccc')
+   ->axisColor('#ff0000')
+   ->gridColor('#ff9900')
+   ->legendBgcolor('#666699')
    ->boxWidth(20)
+   ->boxBorder(1, '#cccccc')
+   ->whisker(1, '#cccccc')
    ->gridVerticalOn()
    ->outlierOn()
    ->jitterOff()

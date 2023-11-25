@@ -1,4 +1,7 @@
 <?php
+
+namespace Macocci7;
+
 require('../vendor/autoload.php');
 require('./class/CsvUtil.php');
 

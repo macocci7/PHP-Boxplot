@@ -1,6 +1,6 @@
 {
     "name": "macocci7/php-boxplot",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "it's easy to use for creating boxplots.",
     "type": "library",
     "require": {
@@ -20,5 +20,8 @@
             "email": "macocci7@yahoo.co.jp"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.7"
+    }
 }
