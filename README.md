@@ -5,7 +5,21 @@ PHP-Boxplot is easy to use for creating boxplots.
 <img src="img/BoxplotDetmersReid2023_01.png" width ="300" />　
 <img src="img/BoxplotDetmersReid2023_02.png" width ="300" />
 
-## Install
+## Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [LICENSE](#license)
+
+## Requirements
+
+- PHP 8.0.0 (CLI) or later
+- Image Magick PECL Extention
+- Composer
+
+## Installation
 
 ```bash
 composer require macocci7/php-boxplot
@@ -46,7 +60,7 @@ composer require macocci7/php-boxplot
 
     ![BoxplotExample.png](img/BoxplotExample.png)
     
-## Example
+## Examples
 
 - [BoxplotExample.php](example/BoxplotExample.php) >> results in:
 
@@ -68,6 +82,6 @@ composer require macocci7/php-boxplot
 
 *Document created: 2023/05/28*
 
-*Document updated: 2023/06/04*
+*Document updated: 2023/11/25*
 
 Copyright 2023 macocci7
