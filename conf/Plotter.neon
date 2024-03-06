@@ -1,0 +1,132 @@
+# Configurantion for Macocci7\PhpBoxplot\Plotter
+
+#imageDriver: 'gd'
+imageDriver: 'imagick'
+
+canvasWidth: 600
+canvasHeight: 500
+canvasBackgroundColor: '#ffffff'
+frameXRatio: 0.8
+frameYRatio: 0.7
+axisColor: '#666666'
+axisWidth: 1
+gridColor: '#999999'
+gridWidth: 1
+gridHeightPitch: null
+gridVertical: false
+boxWidth: 20
+boxBackgroundColors: []
+boxBorderColor: '#3333cc'
+boxBorderWidth: 1
+whiskerColor: '#3333cc'
+whiskerWidth: 1
+fontPath: 'fonts/ipaexg.ttf' # IPA ex Gothic 00401
+#fontPath: 'fonts/ipaexm.ttf' # IPA ex Mincho 00401
+fontSize: 16
+fontColor: '#333333'
+outlier: true
+outlierDiameter: 2
+outlierColor: '#ff0000'
+jitter: false
+jitterColor: '#009900'
+jitterDiameter: 2
+mean: false
+meanColor: '#ff0000'
+labels: []
+labelX: ''
+labelY: ''
+caption: ''
+legend: false
+legendBackgroundColor: '#ffffff'
+legends: []
+legendWidth: 100
+legendFontSize: 10
+colors:
+    - '#9999cc'
+    - '#cc9999'
+    - '#99cc99'
+    - '#99cccc'
+    - '#cc6666'
+    - '#ffcc99'
+    - '#cccc99'
+    - '#cc99cc'
+
+validConfig:
+    imageDriver:
+        type: string
+    canvasWidth:
+        type: int
+    canvasHeight:
+        type: int
+    canvasBackgroundColor:
+        type: colorCode|null
+    frameXRatio:
+        type: float
+    frameYRatio:
+        type: float
+    axisColor:
+        type: colorCode|null
+    axisWidth:
+        type: int
+    gridColor:
+        type: colorCode|null
+    gridWidth:
+        type: int
+    gridHeightPitch:
+        type: int|null
+    gridVertical:
+        type: bool
+    boxWidth:
+        type: int
+    boxBackgroundColor:
+        type: array
+    boxBorderColor:
+        type: colorCode|null
+    boxBorderWidth:
+        type: int
+    whiskerColor:
+        type: colorCode|null
+    whiskerWidth:
+        type: int
+    fontPath:
+        type: string
+    fontSize:
+        type: int|float
+    fontColor:
+        type: colorCode|null
+    outlier:
+        type: bool
+    outlierDiameter:
+        type: int
+    outlierColor:
+        type: colorCode|null
+    jitter:
+        type: bool
+    jitterColor:
+        type: colorCode|null
+    jitterDiameter:
+        type: int
+    mean:
+        type: bool
+    meanColor:
+        type: colorCode|null
+    labels:
+        type: array
+    labelX:
+        type: string
+    labelY:
+        type: string
+    caption:
+        type: string
+    legend:
+        type: bool
+    legendBackgroundColor:
+        type: colorCode|null
+    legends:
+        type: array
+    legendWidth:
+        type: int
+    legendFontSize:
+        type: int|float
+    colors:
+        type: array

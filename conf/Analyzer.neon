@@ -1,0 +1,11 @@
+# Configuration for Macocci7\PhpBoxplot\Analyzer
+
+parsed: []
+
+validConfig:
+    dataSet:
+        type: array
+    limitUpper:
+        type: int|float
+    limitLower:
+        type: int|float
