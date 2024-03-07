@@ -243,7 +243,7 @@ class Boxplot extends Plotter
      */
     public function labels(array $labels)
     {
-        $this->label = [];
+        $this->labels = [];
         foreach ($labels as $label) {
             $this->labels[] = (string) $label;
         }

@@ -6,6 +6,11 @@ use Macocci7\PhpFrequencyTable\FrequencyTable;
 use Macocci7\PhpBoxplot\Helpers\Config;
 use Macocci7\PhpBoxplot\Traits\JudgeTrait;
 
+/**
+ * class for analysis
+ * @author  macocci7 <macocci7@yahoo.co.jp>
+ * @license MIT
+ */
 class Analyzer
 {
     use JudgeTrait;
@@ -104,7 +109,7 @@ class Analyzer
 
     /**
      * sets dataset
-     * @param   array<int|string, array<int|string, int|float>> $dataset
+     * @param   array<int|string, array<int|string, array<int|string, int|float>>>  $dataset
      * @return  self
      * @thrown  \Exception
      */
@@ -171,7 +176,7 @@ class Analyzer
 
     /**
      * gets outliers
-     * @return  array|null
+     * @return  list<int|float>|null
      */
     public function getOutliers()
     {

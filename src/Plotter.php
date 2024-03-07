@@ -37,14 +37,14 @@ class Plotter extends Analyzer
     protected string|null $gridColor;
     protected int $gridWidth;
     protected int|null $gridHeightPitch;
-    protected int $pixGridWidth;
+    protected int|float $pixGridWidth;
     protected int $gridMax;
     protected int $gridMin;
     protected bool $gridVertical;
     protected int $boxCount;
     protected int $boxWidth;
     /**
-     * @var string[]    $bolBackgroundColor
+     * @var string[]    $boxBackgroundColors
      */
     protected array $boxBackgroundColors;
     protected string|null $boxBorderColor;
@@ -233,7 +233,7 @@ class Plotter extends Analyzer
         // Horizontal Axis
         $x1 = (int) $this->baseX;
         $y1 = (int) $this->baseY;
-        $x2 = (int) $this->canvasWidth * (3 + $this->frameXRatio) / 4;
+        $x2 = (int) ($this->canvasWidth * (3 + $this->frameXRatio) / 4);
         $y2 = (int) $this->baseY;
         $this->image->drawLine(
             function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
@@ -245,7 +245,7 @@ class Plotter extends Analyzer
         );
         // Vertical Axis
         $x1 = (int) $this->baseX;
-        $y1 = (int) $this->canvasHeight * (1 - $this->frameYRatio) / 2;
+        $y1 = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 2);
         $x2 = (int) $this->baseX;
         $y2 = (int) $this->baseY;
         $this->image->drawLine(
@@ -426,6 +426,7 @@ class Plotter extends Analyzer
                 $font->valign('center');
             }
         );
+        return $this;
     }
 
     /**
@@ -614,8 +615,8 @@ class Plotter extends Analyzer
             if (!is_string($label) && !is_numeric($label)) {
                 continue;
             }
-            $x = $this->baseX + ($index + 0.5) * $this->pixGridWidth;
-            $y = $this->baseY + $this->fontSize * 1.2;
+            $x = (int) ($this->baseX + ($index + 0.5) * $this->pixGridWidth);
+            $y = (int) ($this->baseY + $this->fontSize * 1.2);
             $this->image->text(
                 (string) $label,
                 $x,
@@ -638,8 +639,8 @@ class Plotter extends Analyzer
      */
     public function plotLabelX()
     {
-        $x = (int) $this->canvasWidth / 2;
-        $y = $this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3 ;
+        $x = (int) ($this->canvasWidth / 2);
+        $y = (int) ($this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
         $this->image->text(
             (string) $this->labelX,
             $x,
@@ -689,8 +690,8 @@ class Plotter extends Analyzer
      */
     public function plotCaption()
     {
-        $x = $this->canvasWidth / 2;
-        $y = $this->canvasHeight * (1 - $this->frameYRatio) / 3;
+        $x = (int) ($this->canvasWidth / 2);
+        $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
         $this->image->text(
             (string) $this->caption,
             $x,
@@ -703,6 +704,7 @@ class Plotter extends Analyzer
                 $font->valign('bottom');
             }
         );
+        return $this;
     }
 
     /**
@@ -714,12 +716,12 @@ class Plotter extends Analyzer
         if (!$this->legend) {
             return $this;
         }
-        $baseX = $this->canvasWidth * (3 + $this->frameXRatio) / 4 - $this->legendWidth;
+        $baseX = (int) ($this->canvasWidth * (3 + $this->frameXRatio) / 4 - $this->legendWidth);
         $baseY = 10;
         $x1 = $baseX;
         $y1 = $baseY;
         $x2 = $x1 + $this->legendWidth;
-        $y2 = $y1 + $this->legendFontSize * 1.2 * $this->legendCount + 8;
+        $y2 = (int) ($y1 + $this->legendFontSize * 1.2 * $this->legendCount + 8);
         $this->image->drawRectangle(
             $x1,
             $y1,
@@ -763,6 +765,7 @@ class Plotter extends Analyzer
                 }
             );
         }
+        return $this;
     }
 
     /**
@@ -807,7 +810,7 @@ class Plotter extends Analyzer
             $index = 0;
             foreach ($data as $values) {
                 $this->ft->setData($values);
-                $this->parsed = $this->ft->parse($values);
+                $this->parsed = $this->ft->parse();
                 $this->plot($index, $legend);
                 $index++;
             }

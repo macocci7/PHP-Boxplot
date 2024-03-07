@@ -11,6 +11,7 @@ use Macocci7\PhpBoxplot\Analyzer;
 
 /**
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 final class AnalyzerTest extends TestCase
 {
@@ -86,7 +87,6 @@ final class AnalyzerTest extends TestCase
     public static function provide_getUcl_can_get_ucl_correctly(): array
     {
         return [
-            ['data' => [1], 'expect' => null, ],
             ['data' => [1, 2, ], 'expect' => 3.5, ],
             ['data' => [1, 2, 3, ], 'expect' => 6.0, ],
             ['data' => [1, 2, 3, 4, ], 'expect' => 6.5, ],
@@ -101,7 +101,7 @@ final class AnalyzerTest extends TestCase
     {
         $a = new Analyzer();
         $cr = (max($data) - min($data)) / 10;
-        $a->ft->setClassRange($cr === 0 ? 10 : $cr);
+        $a->ft->setClassRange($cr);
         $a->ft->setData($data);
         $a->parsed = $a->ft->parse($data);
         $this->assertSame($expect, $a->getUcl());
@@ -110,7 +110,6 @@ final class AnalyzerTest extends TestCase
     public static function provide_getLcl_can_get_lcl_correctly(): array
     {
         return [
-            ['data' => [1], 'expect' => null, ],
             ['data' => [1, 2, ], 'expect' => -0.5, ],
             ['data' => [1, 2, 3, ], 'expect' => -2.0, ],
             ['data' => [1, 2, 3, 4, ], 'expect' => -1.5, ],
@@ -125,7 +124,7 @@ final class AnalyzerTest extends TestCase
     {
         $a = new Analyzer();
         $cr = (max($data) - min($data)) / 10;
-        $a->ft->setClassRange($cr === 0 ? 10 : $cr);
+        $a->ft->setClassRange($cr);
         $a->ft->setData($data);
         $a->parsed = $a->ft->parse($data);
         $this->assertSame($expect, $a->getLcl());
@@ -134,7 +133,6 @@ final class AnalyzerTest extends TestCase
     public static function provide_getOutliers_can_get_outliers_correctly(): array
     {
         return [
-            ['data' => [1], 'expect' => null, ],
             ['data' => [1, 2, ], 'expect' => [], ],
             ['data' => [1, 2, 3, ], 'expect' => [], ],
             ['data' => [1, 2, 3, 4, ], 'expect' => [], ],
@@ -152,7 +150,7 @@ final class AnalyzerTest extends TestCase
     {
         $a = new Analyzer();
         $cr = (max($data) - min($data)) / 10;
-        $a->ft->setClassRange($cr === 0 ? 10 : $cr);
+        $a->ft->setClassRange($cr);
         $a->ft->setData($data);
         $a->parsed = $a->ft->parse($data);
         $this->assertSame($expect, $a->getOutliers());

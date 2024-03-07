@@ -15,12 +15,4 @@ $data = [
 $bp = new Boxplot();
 
 $bp->setData($data)
-   //->limit(0, 100)
-   //->gridHeightPitch(10)
-   //->gridVerticalOn()
-   //->outlierOn()
-   //->meanOn()
-   //->labelX('Examination')
-   //->labelY('Score')
-   //->caption('Results in 2022')
-   ->create('img/BoxplotExample.png');
+   ->create('img/BasicUsage.png');

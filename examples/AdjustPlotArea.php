@@ -15,12 +15,11 @@ $data = [
 $bp = new Boxplot();
 
 $bp->setData($data)
-   //->limit(0, 100)
-   //->gridHeightPitch(10)
-   //->gridVerticalOn()
-   //->outlierOn()
-   //->meanOn()
-   //->labelX('Examination')
-   //->labelY('Score')
-   //->caption('Results in 2022')
-   ->create('img/BoxplotExample.png');
+   ->limit(0, 100)
+   ->gridHeightPitch(20)
+   ->gridVerticalOn()
+   ->labels([ '#1', '#2', '#3', '#4', '#5', ])
+   ->labelX('Achievement Test')
+   ->labelY('Score')
+   ->caption('Achievement Test Results in 2023')
+   ->create('img/AdjustPlotArea.png');
