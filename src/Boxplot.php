@@ -56,6 +56,9 @@ class Boxplot extends Plotter
     {
         foreach (Config::filter($configResource) as $key => $value) {
             $this->{$key} = $value;
+            if (strcmp('dataSet', $key) === 0 && empty($this->legends)) {
+                $this->legends = array_keys($value);
+            }
         }
         return $this;
     }

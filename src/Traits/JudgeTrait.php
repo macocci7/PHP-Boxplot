@@ -5,6 +5,24 @@ namespace Macocci7\PhpBoxplot\Traits;
 trait JudgeTrait
 {
     /**
+     * judges if all items are integer or not
+     * @param   array<mixed>    $items
+     * @return  bool
+     */
+    public static function isIntAll(array $items): bool
+    {
+        if (empty($items)) {
+            return false;
+        }
+        foreach ($items as $item) {
+            if (!is_int($item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * judges if the param is number
      * @param   mixed   $item
      * @return  bool

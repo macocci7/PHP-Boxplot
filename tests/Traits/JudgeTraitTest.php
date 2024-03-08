@@ -20,6 +20,34 @@ final class JudgeTraitTest extends TestCase
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     // phpcs:disable Generic.Files.LineLength.TooLong
 
+    public static function provide_isIntAll_can_judge_correctly(): array
+    {
+        return [
+            [ 'items' => [], 'expect' => false, ],
+            [ 'items' => [null], 'expect' => false, ],
+            [ 'items' => [true], 'expect' => false, ],
+            [ 'items' => [false], 'expect' => false, ],
+            [ 'items' => [[]], 'expect' => false, ],
+            [ 'items' => ['1'], 'expect' => false, ],
+            [ 'items' => [1.2], 'expect' => false, ],
+            [ 'items' => [0], 'expect' => true, ],
+            [ 'items' => [-1], 'expect' => true, ],
+            [ 'items' => [1], 'expect' => true, ],
+            [ 'items' => [ 1, 2, ], 'expect' => true, ],
+            [ 'items' => [ -1, 0, 1, ], 'expect' => true, ],
+            [ 'items' => [ 1, '2', 3, ], 'expect' => false, ],
+            [ 'items' => [ 1, 2.0, 3, ], 'expect' => false, ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_isIntAll_can_judge_correctly
+     */
+    public function test_isIntAll_can_judge_correctly(array $items, bool $expect): void
+    {
+        $this->assertSame($expect, self::isIntAll($items));
+    }
+
     public static function provide_isNumber_can_judge_correctly(): array
     {
         return [
@@ -48,7 +76,7 @@ final class JudgeTraitTest extends TestCase
      */
     public function test_isNumber_can_judge_correctly(mixed $item, bool $expect): void
     {
-        $this->assertSame($expect, $this->isNumber($item));
+        $this->assertSame($expect, self::isNumber($item));
     }
 
     public static function provide_isColorCode_can_judge_correctly(): array
@@ -81,7 +109,7 @@ final class JudgeTraitTest extends TestCase
      */
     public function test_isColorCode_can_judge_correctly(string $color, bool $expect): void
     {
-        $this->assertSame($expect, $this->isColorCode($color));
+        $this->assertSame($expect, self::isColorCode($color));
     }
 
     public static function provide_isColorCodeAll_can_judge_correctly(): array

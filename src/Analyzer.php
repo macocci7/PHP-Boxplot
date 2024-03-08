@@ -26,6 +26,10 @@ class Analyzer
     public array $parsed;
     protected int|float $limitUpper;
     protected int|float $limitLower;
+    /**
+     * @var string[]    $legends
+     */
+    protected array $legends;
 
     /**
      * constructor
@@ -101,9 +105,11 @@ class Analyzer
         if (!$this->isValidData($data)) {
             throw new \Exception("Invalid data specified. array<int|string, list<int|float>> expected.");
         }
+        $this->dataSet = [[]];
         foreach ($data as $key => $values) {
             $this->dataSet[0][$key] = $values;
         }
+        $this->legends = [];
         return $this;
     }
 
@@ -122,6 +128,7 @@ class Analyzer
             );
         }
         $this->dataSet = $dataset;
+        $this->legends = array_keys($dataset);
         return $this;
     }
 

@@ -75,10 +75,6 @@ class Plotter extends Analyzer
     protected bool $legend;
     protected int $legendCount;
     protected string|null $legendBackgroundColor;
-    /**
-     * @var string[]    $legends
-     */
-    protected array $legends;
     protected int $legendWidth;
     protected int $legendFontSize;
     /**
@@ -219,7 +215,7 @@ class Plotter extends Analyzer
         // - If $this->labels has values, those values takes precedence.
         // - The values of $this->labels may be set by the function labels().
         if (empty($this->labels)) {
-            $this->labels = array_keys($this->dataSet[0]);
+            $this->labels = array_keys($this->dataSet[array_keys($this->dataSet)[0]]);
         }
         return $this;
     }
@@ -806,7 +802,8 @@ class Plotter extends Analyzer
         $this->plotGrids();
         $this->plotGridValues();
         $this->plotAxis();
-        foreach ($this->dataSet as $legend => $data) {
+        $legend = 0;
+        foreach ($this->dataSet as $data) {
             $index = 0;
             foreach ($data as $values) {
                 $this->ft->setData($values);
@@ -814,6 +811,7 @@ class Plotter extends Analyzer
                 $this->plot($index, $legend);
                 $index++;
             }
+            $legend++;
         }
         $this->plotLabels();
         $this->plotLabelX();

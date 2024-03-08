@@ -18,8 +18,12 @@ $bp->setData($data)
    ->limit(0, 100)
    ->gridHeightPitch(20)
    ->gridVerticalOn()
+   ->meanOn()
+   ->jitterOn()
+   ->legendOn()
    ->labels([ '#1', '#2', '#3', '#4', '#5', ])
    ->labelX('Achievement Test')
    ->labelY('Score')
    ->caption('Achievement Test Results in 2023')
-   ->create('img/AdjustPlotArea.png');
+   ->legends(['Donald Biden'])
+   ->create('img/AdjustDisplay.png');
