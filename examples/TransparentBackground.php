@@ -1,6 +1,6 @@
 <?php
 
-require('../vendor/autoload.php');
+require_once('../vendor/autoload.php');
 
 use Macocci7\PhpBoxplot\Boxplot;
 
@@ -15,6 +15,10 @@ $data = [
 $bp = new Boxplot();
 
 $bp->setData($data)
+   ->config([
+    // This results in Transparent Background
+    'canvasBackgroundColor' => null,
+   ])
    ->limit(0, 100)
    ->gridHeightPitch(10)
    ->gridVerticalOn()
@@ -22,5 +26,5 @@ $bp->setData($data)
    ->meanOn()
    ->labelX('Examination')
    ->labelY('Score')
-   ->caption('Results in 2022')
-   ->create('img/BoxplotExample.png');
+   ->caption('Transparent Background')
+   ->create('img/TransparentBackground.png');

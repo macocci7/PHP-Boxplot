@@ -3,15 +3,64 @@
 namespace Macocci7\PhpBoxplot;
 
 use Macocci7\PhpBoxplot\Plotter;
+use Macocci7\PhpBoxplot\Helpers\Config;
+use Macocci7\PhpBoxplot\Traits\JudgeTrait;
+use Nette\Neon\Neon;
 
+/**
+ * class for managing boxplot
+ * @author  macocci7 <macocci7@yahoo.co.jp>
+ * @license MIT
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class Boxplot extends Plotter
 {
+    use JudgeTrait;
+
+    private int $CANVAS_WIDTH_LIMIT_LOWER;
+    private int $CANVAS_HEIGHT_LIMIT_LOWER;
+
     /**
      * constructor
      */
     public function __construct()
     {
         parent::__construct();
+        $this->loadConf();
+    }
+
+    /**
+     * loads config.
+     * @return  void
+     */
+    private function loadConf()
+    {
+        Config::load();
+        $props = [
+            'CANVAS_WIDTH_LIMIT_LOWER',
+            'CANVAS_HEIGHT_LIMIT_LOWER',
+        ];
+        foreach ($props as $prop) {
+            $this->{$prop} = Config::get($prop);
+        }
+    }
+
+    /**
+     * set config from specified resource
+     * @param   string|mixed[]  $configResource
+     * @return  self
+     */
+    public function config(string|array $configResource)
+    {
+        foreach (Config::filter($configResource) as $key => $value) {
+            $this->{$key} = $value;
+            if (strcmp('dataSet', $key) === 0 && empty($this->legends)) {
+                $this->legends = array_keys($value);
+            }
+        }
+        return $this;
     }
 
     /**
@@ -127,13 +176,10 @@ class Boxplot extends Plotter
      * @param   int|float   $pitch
      * @return  self
      */
-    public function gridHeightPitch($pitch)
+    public function gridHeightPitch(int|float $pitch)
     {
-        if (!is_int($pitch) && !is_float($pitch)) {
-            return;
-        }
         if ($pitch <= 0) {
-            return;
+            throw new \Exception("specify positive number.");
         }
         $this->gridHeightPitch = $pitch;
         return $this;
@@ -144,11 +190,21 @@ class Boxplot extends Plotter
      * @param   int $width
      * @param   int $height
      * @return  self
+     * @thrown  \Exception
      */
     public function resize(int $width, int $height)
     {
-        if ($width < 100 || $height < 100) {
-            return;
+        if ($width < $this->CANVAS_WIDTH_LIMIT_LOWER) {
+            throw new \Exception(
+                "width is below the lower limit "
+                . $this->CANVAS_WIDTH_LIMIT_LOWER
+            );
+        }
+        if ($height < $this->CANVAS_HEIGHT_LIMIT_LOWER) {
+            throw new \Exception(
+                "height is below the lower limit "
+                . $this->CANVAS_HEIGHT_LIMIT_LOWER
+            );
         }
         $this->canvasWidth = $width;
         $this->canvasHeight = $height;
@@ -163,7 +219,7 @@ class Boxplot extends Plotter
     public function boxWidth(int $width)
     {
         if ($width < $this->boxBorderWidth * 2 + 1) {
-            return;
+            throw new \Exception("Box width must be greater than twice of box border width.");
         }
         $this->boxWidth = $width;
         return $this;
@@ -171,7 +227,7 @@ class Boxplot extends Plotter
 
     /**
      * sets background colors of boxes
-     * @param   array   $colors
+     * @param   string[]    $colors
      * @return  self
      */
     public function boxBackground(array $colors)
@@ -179,18 +235,18 @@ class Boxplot extends Plotter
         if (!$this->isColorCodeAll($colors)) {
             throw new \Exception("only color codes are acceptable.");
         }
-        $this->boxBackgroundColor = $colors;
+        $this->boxBackgroundColors = $colors;
         return $this;
     }
 
     /**
      * sets labels
-     * @param   array   $labels
+     * @param   array<int|string, int|string>   $labels
      * @return  self
      */
     public function labels(array $labels)
     {
-        $this->label = [];
+        $this->labels = [];
         foreach ($labels as $label) {
             $this->labels[] = (string) $label;
         }
@@ -232,7 +288,7 @@ class Boxplot extends Plotter
 
     /**
      * sets legends
-     * @param   array   $legends
+     * @param   string[]    $legends
      * @return  self
      */
     public function legends(array $legends)
@@ -243,7 +299,6 @@ class Boxplot extends Plotter
 
     /**
      * sets vertical grids on
-     * @param
      * @return  self
      */
     public function gridVerticalOn()
@@ -254,7 +309,6 @@ class Boxplot extends Plotter
 
     /**
      * sets vertical grids off
-     * @param
      * @return  self
      */
     public function gridVerticalOff()
@@ -265,7 +319,6 @@ class Boxplot extends Plotter
 
     /**
      * sets detecting outliers on
-     * @param
      * @return  self
      */
     public function outlierOn()
@@ -276,7 +329,6 @@ class Boxplot extends Plotter
 
     /**
      * sets detecting outliers off
-     * @param
      * @return  self
      */
     public function outlierOff()
@@ -287,7 +339,6 @@ class Boxplot extends Plotter
 
     /**
      * sets jitter plotting on
-     * @param
      * @return  self
      */
     public function jitterOn()
@@ -298,7 +349,6 @@ class Boxplot extends Plotter
 
     /**
      * sets jitter plotting off
-     * @param
      * @return  self
      */
     public function jitterOff()
@@ -309,7 +359,6 @@ class Boxplot extends Plotter
 
     /**
      * sets plotting means on
-     * @param
      * @return  self
      */
     public function meanOn()
@@ -320,7 +369,6 @@ class Boxplot extends Plotter
 
     /**
      * sets plotting means off
-     * @param
      * @return  self
      */
     public function meanOff()
@@ -331,7 +379,6 @@ class Boxplot extends Plotter
 
     /**
      * sets showing legends on
-     * @param
      * @return  self
      */
     public function legendOn()
@@ -342,7 +389,6 @@ class Boxplot extends Plotter
 
     /**
      * sets showing legends off
-     * @param
      * @return  self
      */
     public function legendOff()

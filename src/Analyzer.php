@@ -3,22 +3,78 @@
 namespace Macocci7\PhpBoxplot;
 
 use Macocci7\PhpFrequencyTable\FrequencyTable;
+use Macocci7\PhpBoxplot\Helpers\Config;
+use Macocci7\PhpBoxplot\Traits\JudgeTrait;
 
+/**
+ * class for analysis
+ * @author  macocci7 <macocci7@yahoo.co.jp>
+ * @license MIT
+ */
 class Analyzer
 {
-    public $ft;
-    public $data;
-    public $parsed = [];
-    public $limitUpper;
-    public $limitLower;
-    public $boxCount = 0;
+    use JudgeTrait;
+
+    public FrequencyTable $ft;
+    /**
+     * @var array<int|string, array<int|string, list<int|float>>>   $dataSet
+     */
+    protected array $dataSet;
+    /**
+     * @var array<string, mixed>    $parsed
+     */
+    public array $parsed;
+    protected int|float $limitUpper;
+    protected int|float $limitLower;
+    /**
+     * @var string[]    $legends
+     */
+    protected array $legends;
 
     /**
      * constructor
      */
     public function __construct()
     {
+        $this->loadConf();
         $this->ft = new FrequencyTable();
+    }
+
+    /**
+     * loads config.
+     * @return  void
+     */
+    private function loadConf()
+    {
+        Config::load();
+        $props = [
+            'parsed',
+        ];
+        foreach ($props as $prop) {
+            $this->{$prop} = Config::get($prop);
+        }
+    }
+
+    /**
+     * returns prop:
+     * - of the specified key
+     * - all configs if param is not specified
+     * @param   string|null $key = null
+     * @return  mixed
+     */
+    public function getProp(string|null $key = null)
+    {
+        if (is_null($key)) {
+            $config = [];
+            foreach (array_keys(Config::get('validConfig')) as $key) {
+                $config[$key] = $this->{$key};
+            }
+            return $config;
+        }
+        if (isset($this->{$key})) {
+            return $this->{$key};
+        }
+        return null;
     }
 
     /**
@@ -26,15 +82,10 @@ class Analyzer
      * @param   int|float   $lower
      * @param   int|float   $upper
      * @return  self
+     * @thrown  \Exception
      */
-    public function limit($lower, $upper)
+    public function limit(int|float $lower, int|float $upper)
     {
-        if (!is_int($lower) && !is_float($lower)) {
-            throw new \Exception("lower limit must be a number.");
-        }
-        if (!is_int($upper) && !is_float($upper)) {
-            throw new \Exception("upper limit must be a number.");
-        }
         if ($lower >= $upper) {
             throw new \Exception("lower limit must be less than upper limit.");
         }
@@ -45,132 +96,107 @@ class Analyzer
 
     /**
      * sets data
-     * @param   array   $data
+     * @param   array<int|string, list<int|float>>   $data
      * @return  self
+     * @thrown  \Exception
      */
     public function setData(array $data)
     {
-        foreach ($data as $key => $values) {
-            $this->data[0][$key] = $values;
+        if (!$this->isValidData($data)) {
+            throw new \Exception("Invalid data specified. array<int|string, list<int|float>> expected.");
         }
+        $this->dataSet = [[]];
+        foreach ($data as $key => $values) {
+            $this->dataSet[0][$key] = $values;
+        }
+        $this->legends = [];
         return $this;
     }
 
     /**
      * sets dataset
-     * @param   array   $dataset
+     * @param   array<int|string, array<int|string, array<int|string, int|float>>>  $dataset
      * @return  self
+     * @thrown  \Exception
      */
     public function setDataset(array $dataset)
     {
-        $this->data = $dataset;
+        if (!$this->isValidDataset($dataset)) {
+            throw new \Exception(
+                "Invalid dataset specified."
+                . " array<int|string, array<int|string, int|float>> expected."
+            );
+        }
+        $this->dataSet = $dataset;
+        $this->legends = array_keys($dataset);
         return $this;
     }
 
     /**
-     * judges wheter $color is in supported color code format or not
-     * @param string $color
-     * @return bool
-     */
-    public function isColorCode(string $color)
-    {
-        return preg_match('/^#[A-Fa-f0-9]{3}$|^#[A-Fa-f0-9]{6}$/', $color)
-               ? true
-               : false
-               ;
-    }
-
-    /**
-     * judges if all of params are colorcode or not
-     * @param   array   $colors
-     * @return  bool
-     */
-    public function isColorCodeAll(array $colors)
-    {
-        if (empty($colors)) {
-            return false;
-        }
-        foreach ($colors as $color) {
-            if (!$this->isColorCode($color)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * gets mean of $data
-     * @param   array   $data
-     * @return  float
+     * @param   array<int|string, int|float>    $data
+     * @return  float|null
      */
     public function getMean(array $data)
     {
-        if (empty($data)) {
+        if (!$this->isNumbersAll($data)) {
             return null;
-        }
-        foreach ($data as $value) {
-            if (!is_int($value) && !is_float($value)) {
-                return null;
-            }
         }
         return array_sum($data) / count($data);
     }
 
     /**
      * gets UCL
-     * @param
-     * @return  float
+     * @return  float|null
      */
     public function getUcl()
     {
         if (!is_array($this->parsed)) {
-            return;
+            return null;
         }
         if (!array_key_exists('ThirdQuartile', $this->parsed)) {
-            return;
+            return null;
         }
         if (!array_key_exists('InterQuartileRange', $this->parsed)) {
-            return;
+            return null;
         }
         return $this->parsed['ThirdQuartile'] + 1.5 * $this->parsed['InterQuartileRange'];
     }
 
     /**
      * gets LCL
-     * @param
-     * @return  float
+     * @return  float|null
      */
     public function getLcl()
     {
         if (!is_array($this->parsed)) {
-            return;
+            return null;
         }
         if (!array_key_exists('FirstQuartile', $this->parsed)) {
-            return;
+            return null;
         }
         if (!array_key_exists('InterQuartileRange', $this->parsed)) {
-            return;
+            return null;
         }
         return $this->parsed['FirstQuartile'] - 1.5 * $this->parsed['InterQuartileRange'];
     }
 
     /**
      * gets outliers
-     * @param
-     * @return  array
+     * @return  list<int|float>|null
      */
     public function getOutliers()
     {
         if (!is_array($this->parsed)) {
-            return;
+            return null;
         }
         if (!array_key_exists('data', $this->parsed)) {
-            return;
+            return null;
         }
         $ucl = $this->getUcl();
         $lcl = $this->getLcl();
-        if (null === $ucl || null === $lcl) {
-            return;
+        if (is_null($ucl) || is_null($lcl)) {
+            return null;
         }
         $outliers = [];
         foreach ($this->parsed['data'] as $value) {

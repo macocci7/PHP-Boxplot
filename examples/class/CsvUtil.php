@@ -8,10 +8,6 @@ namespace Macocci7;
 
 class CsvUtil
 {
-    public function __construct()
-    {
-    }
-
     public function groupBy($csv, $keyColumn, $valueColumn)
     {
         // CSV MUST INCLUDES COLUMN NAMES IN HEAD LINE
@@ -20,10 +16,10 @@ class CsvUtil
         $indexKeyColumn = array_search($keyColumn, $head);
         $indexValueColumn = array_search($valueColumn, $head);
         if (!$indexKeyColumn || !$indexValueColumn) {
-            return;
+            return null;
         }
         $groupBy = [];
-        foreach ($data as $index => $row) {
+        foreach ($data as $row) {
             if (null == $row[$indexValueColumn]) {
                 continue;
             }

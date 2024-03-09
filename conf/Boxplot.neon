@@ -1,0 +1,88 @@
+# Configuration for Macocci7\PhpBoxplot\Boxplot
+
+CANVAS_WIDTH_LIMIT_LOWER: 100
+CANVAS_HEIGHT_LIMIT_LOWER: 100
+
+validConfig:
+    dataSet:
+        type: array
+    limitUpper:
+        type: number
+    limitLower:
+        type: number
+    canvasWidth:
+        type: int
+    canvasHeight:
+        type: int
+    canvasBackgroundColor:
+        type: colorCode|null
+    frameXRatio:
+        type: float
+    frameYRatio:
+        type: float
+    axisColor:
+        type: colorCode|null
+    axisWidth:
+        type: int
+    gridColor:
+        type: colorCode|null
+    gridWidth:
+        type: int
+    gridHeightPitch:
+        type: int|null
+    gridVertical:
+        type: bool
+    boxWidth:
+        type: int
+    boxBackgroundColors:
+        type: array
+    boxBorderColor:
+        type: colorCode|null
+    boxBorderWidth:
+        type: int
+    whiskerColor:
+        type: colorCode|null
+    whiskerWidth:
+        type: int
+    fontPath:
+        type: string
+    fontSize:
+        type: number
+    fontColor:
+        type: colorCode|null
+    outlier:
+        type: bool
+    outlierDiameter:
+        type: int
+    outlierColor:
+        type: colorCode|null
+    jitter:
+        type: bool
+    jitterColor:
+        type: colorCode|null
+    jitterDiameter:
+        type: int
+    mean:
+        type: bool
+    meanColor:
+        type: colorCode|null
+    labels:
+        type: array
+    labelX:
+        type: string
+    labelY:
+        type: string
+    caption:
+        type: string
+    legend:
+        type: bool
+    legendBackgroundColor:
+        type: colorCode|null
+    legends:
+        type: array
+    legendWidth:
+        type: int
+    legendFontSize:
+        type: number
+    colors:
+        type: array
