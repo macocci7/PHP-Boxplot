@@ -5,5 +5,5 @@ require_once('../vendor/autoload.php');
 use Macocci7\PhpBoxplot\Boxplot;
 
 $bp = new Boxplot();
-$bp->config('ChangePropsByNeon.neon')
-   ->create('img/ChangePropsByNeon.png');
+$bp->config('AdjustDisplayByNeon.neon')
+   ->create('img/AdjustDisplayByNeon.png');

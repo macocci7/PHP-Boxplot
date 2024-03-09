@@ -41,7 +41,7 @@ $conf = [
     'mean' => true,
     'labelX' => 'Achievement Test',
     'labelY' => 'Score',
-    'caption' => 'Changing Properties By Array',
+    'caption' => 'Adjusting the Display By Array',
     'legend' => true,
     'legendBackgroundColor' => '#666666',
     'legendWidth' => 100,
@@ -50,4 +50,4 @@ $conf = [
 
 $bp = new Boxplot();
 $bp->config($conf)
-   ->create('img/ChangePropsByArray.png');
+   ->create('img/AdjustDisplayByArray.png');

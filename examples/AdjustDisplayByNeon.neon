@@ -75,7 +75,7 @@ mean: true
 #labels: [ '1st', '2nd', '3rd', '4th', '5th' ]
 labelX: 'Achievement Test'
 labelY: 'Score'
-caption: 'Changing Properties By Neon File'
+caption: 'Adjusting the Display By Neon File'
 
 legend: true
 legendBackgroundColor: '#666666'

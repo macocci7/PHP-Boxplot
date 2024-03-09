@@ -79,6 +79,37 @@ final class JudgeTraitTest extends TestCase
         $this->assertSame($expect, self::isNumber($item));
     }
 
+    public static function provide_isNumbersAll_can_judge_correctly(): array
+    {
+        return [
+            [ 'items' => null, 'expect' => false, ],
+            [ 'items' => true, 'expect' => false, ],
+            [ 'items' => false, 'expect' => false, ],
+            [ 'items' => '1', 'expect' => false, ],
+            [ 'items' => 1, 'expect' => false, ],
+            [ 'items' => 2.3, 'expect' => false, ],
+            [ 'items' => [], 'expect' => false, ],
+            [ 'items' => [null], 'expect' => false, ],
+            [ 'items' => [true], 'expect' => false, ],
+            [ 'items' => [false], 'expect' => false, ],
+            [ 'items' => ['1'], 'expect' => false, ],
+            [ 'items' => [1], 'expect' => true, ],
+            [ 'items' => [2.3], 'expect' => true, ],
+            [ 'items' => [[1]], 'expect' => false, ],
+            [ 'items' => [ 1, 2, ], 'expect' => true, ],
+            [ 'items' => [ 1, 2.3, ], 'expect' => true, ],
+            [ 'items' => [ 1, 2, '3', ], 'expect' => false, ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_isNumbersAll_can_judge_correctly
+     */
+    public function test_isNumbersAll_can_judge_correctly(mixed $items, bool $expect): void
+    {
+        $this->assertSame($expect, self::isNumbersAll($items));
+    }
+
     public static function provide_isColorCode_can_judge_correctly(): array
     {
         return [
@@ -134,14 +165,6 @@ final class JudgeTraitTest extends TestCase
     public function test_isColorCodeAll_can_judge_correctly(array $params, bool $expect): void
     {
         $this->assertSame($expect, self::isColorCodeAll($params));
-    }
-
-    /**
-     * @dataProvider provide_support_object_like_keys_correctly
-     */
-    public function get_can_support_object_like_keys_correctly(string $key, array|null $expect): void
-    {
-        $this->assertSame($expect, Config::get($key));
     }
 
     public static function provide_isValidType_can_judge_correctly(): array
@@ -231,5 +254,123 @@ final class JudgeTraitTest extends TestCase
     public function test_isValidType_can_judge_correctly(mixed $input, string $def, bool $expect): void
     {
         $this->assertSame($expect, self::isValidType($input, $def));
+    }
+
+    public static function provide_isValidData_can_judge_correctly(): array
+    {
+        return [
+            [ 'data' => null, 'expect' => false, ],
+            [ 'data' => true, 'expect' => false, ],
+            [ 'data' => false, 'expect' => false, ],
+            [ 'data' => 1, 'expect' => false, ],
+            [ 'data' => 2.3, 'expect' => false, ],
+            [ 'data' => '1', 'expect' => false, ],
+            [ 'data' => [], 'expect' => false, ],
+            [ 'data' => [null], 'expect' => false, ],
+            [ 'data' => [true], 'expect' => false, ],
+            [ 'data' => [false], 'expect' => false, ],
+            [ 'data' => [1], 'expect' => false, ],
+            [ 'data' => [2.3], 'expect' => false, ],
+            [ 'data' => ['1'], 'expect' => false, ],
+            [ 'data' => [[]], 'expect' => false, ],
+            [ 'data' => [[null]], 'expect' => false, ],
+            [ 'data' => [[true]], 'expect' => false, ],
+            [ 'data' => [[false]], 'expect' => false, ],
+            [ 'data' => [['1']], 'expect' => false, ],
+            [ 'data' => [[[1]]], 'expect' => false, ],
+            [ 'data' => [[1]], 'expect' => true, ],
+            [ 'data' => [[2.3]], 'expect' => true, ],
+            [ 'data' => [[ 1, 2, ]], 'expect' => true, ],
+            [ 'data' => [[ 1, 2.3, ]], 'expect' => true, ],
+            [ 'data' => [[ 1, 2.3, true ]], 'expect' => false, ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_isValidData_can_judge_correctly
+     */
+    public function test_isValidData_can_judge_correctly(mixed $data, bool $expect): void
+    {
+        $this->assertSame($expect, self::isValidData($data));
+    }
+
+    public static function provide_isValidDataset_can_judge_correctly(): array
+    {
+        return [
+            [ 'dataset' => null, 'expect' => false, ],
+            [ 'dataset' => true, 'expect' => false, ],
+            [ 'dataset' => false, 'expect' => false, ],
+            [ 'dataset' => 1, 'expect' => false, ],
+            [ 'dataset' => 2.3, 'expect' => false, ],
+            [ 'dataset' => '1', 'expect' => false, ],
+            [ 'dataset' => [], 'expect' => false, ],
+            [ 'dataset' => [null], 'expect' => false, ],
+            [ 'dataset' => [true], 'expect' => false, ],
+            [ 'dataset' => [false], 'expect' => false, ],
+            [ 'dataset' => [1], 'expect' => false, ],
+            [ 'dataset' => [2.3], 'expect' => false, ],
+            [ 'dataset' => ['1'], 'expect' => false, ],
+            [ 'dataset' => [[]], 'expect' => false, ],
+            [ 'dataset' => [[null]], 'expect' => false, ],
+            [ 'dataset' => [[true]], 'expect' => false, ],
+            [ 'dataset' => [[false]], 'expect' => false, ],
+            [ 'dataset' => [['1']], 'expect' => false, ],
+            [ 'dataset' => [[[1]]], 'expect' => true, ],
+            [ 'dataset' => [[1]], 'expect' => false, ],
+            [ 'dataset' => [[2.3]], 'expect' => false, ],
+            [ 'dataset' => [[ 1, 2, ]], 'expect' => false, ],
+            [ 'dataset' => [[ 1, 2.3, ]], 'expect' => false, ],
+            [ 'dataset' => [[ 1, 2.3, true ]], 'expect' => false, ],
+            [
+                'dataset' => [
+                    'John' => [
+                        [ 1, 2.3, ],
+                    ],
+                ],
+                'expect' => true,
+            ],
+            [
+                'dataset' => [
+                    'John' => [
+                        [ 1, 2.3, ],
+                        [ 4, 5.6, ],
+                    ],
+                    'Jake' => [
+                        [ 1, 2.3, ],
+                        [ 4, 5.6, ],
+                        [ 7, 8.9, ],
+                    ],
+                ],
+                'expect' => true,
+            ],
+            [
+                'dataset' => [
+                    'John' => [
+                        [ 1, 2.3, ],
+                        [ 4, 5.6, ],
+                    ],
+                    'Jake' => [
+                        [ 1, 2.3, ],
+                        [ 4, 5.6, ],
+                        [ 7, 8.9, ],
+                    ],
+                    'Hugo' => [
+                        [ 1, 2.3, ],
+                        [ 4, 5.6, ],
+                        [ 7, 8.9, ],
+                        [ null ],
+                    ],
+                ],
+                'expect' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provide_isValidDataset_can_judge_correctly
+     */
+    public function test_isValidDataset_can_judge_correctly(mixed $dataset, bool $expect): void
+    {
+        $this->assertSame($expect, self::isValidDataset($dataset));
     }
 }

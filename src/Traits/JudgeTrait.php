@@ -85,6 +85,31 @@ trait JudgeTrait
     }
 
     /**
+     * judges if type of $input is valid or not
+     * @param   mixed   $input
+     * @param   string  $defs
+     * @return  bool
+     */
+    public static function isValidType(mixed $input, string $defs)
+    {
+        $r = false;
+        foreach (explode('|', $defs) as $def) {
+            $r = $r || match ($def) {
+                'int' => is_int($input),
+                'float' => is_float($input),
+                'string' => is_string($input),
+                'bool' => is_bool($input),
+                'array' => is_array($input),
+                'null' => is_null($input),
+                'number' => self::isNumber($input),
+                'colorCode' => self::isColorCode($input),
+                default => false,
+            };
+        }
+        return $r;
+    }
+
+    /**
      * judges if the data is valid or not
      * @param   mixed   $data
      * @return  bool
@@ -124,30 +149,5 @@ trait JudgeTrait
             }
         }
         return true;
-    }
-
-    /**
-     * judges if type of $input is valid or not
-     * @param   mixed   $input
-     * @param   string  $defs
-     * @return  bool
-     */
-    public static function isValidType(mixed $input, string $defs)
-    {
-        $r = false;
-        foreach (explode('|', $defs) as $def) {
-            $r = $r || match ($def) {
-                'int' => is_int($input),
-                'float' => is_float($input),
-                'string' => is_string($input),
-                'bool' => is_bool($input),
-                'array' => is_array($input),
-                'null' => is_null($input),
-                'number' => self::isNumber($input),
-                'colorCode' => self::isColorCode($input),
-                default => false,
-            };
-        }
-        return $r;
     }
 }

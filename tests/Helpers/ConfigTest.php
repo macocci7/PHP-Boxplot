@@ -91,6 +91,14 @@ final class ConfigTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider provide_support_object_like_keys_correctly
+     */
+    public function get_can_support_object_like_keys_correctly(string $key, array|null $expect): void
+    {
+        $this->assertSame($expect, Config::get($key));
+    }
+
     public static function tearDownAfterClass(): void
     {
         $testConf = __DIR__ . '/../../conf/ConfigTest.neon';

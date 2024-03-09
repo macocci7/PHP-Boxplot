@@ -19,7 +19,7 @@ Multiple datasets can be displayed side by side at the same time.
 
 Legends can also be displayed.
 
-<img src="examples/img/ChangePropsByNeon.png" width="300" />
+<img src="examples/img/AdjustDisplayByNeon.png" width="300" />
 
 Transparent background is also supported.
 
@@ -35,8 +35,8 @@ Transparent background is also supported.
     - [5.1. Basic Usage](#51-basic-usage)
     - [5.2. Adjusting the Display By Methods](#52-adjusting-the-display-by-methods)
     - [5.3. Multiple Data Set](#53-multiple-data-set)
-    - [5.4. Changing Props By Neon File](#54-changing-props-by-neon-file)
-    - [5.5. Changing Props By Array](#55-changing-props-by-array)
+    - [5.4. Adjusting the Display By Neon File](#54-adjusting-the-display-by-neon-file)
+    - [5.5. Adjusting the Display By Array](#55-adjusting-the-display-by-array)
     - [5.6. Transparent Background](#56-transparent-background)
 - [6. Examples](#6-examples)
 - [7. LICENSE](#7-license)
@@ -58,8 +58,8 @@ composer require macocci7/php-boxplot
 - [5.1. Basic Usage](#51-basic-usage)
 - [5.2. Adjusting the Display By Methods](#52-adjusting-the-display-by-methods)
 - [5.3. Multiple Data Set](#53-multiple-data-set)
-- [5.4. Changing Props By Neon File](#54-changing-props-by-neon-file)
-- [5.5. Changing Props By Array](#55-changing-props-by-array)
+- [5.4. Adjusting the Display By Neon File](#54-adjusting-the-display-by-neon-file)
+- [5.5. Adjusting the Display By Array](#55-adjusting-the-display-by-array)
 - [5.6. Transparent Background](#56-transparent-background)
 
 ### 5.1. Basic Usage
@@ -135,16 +135,20 @@ And Setting Caption can be done as follows:
        ->limit(0, 100)
        ->gridHeightPitch(20)
        ->gridVerticalOn()
+       ->meanOn()
+       ->jitterOn()
+       ->legendOn()
        ->labels([ '#1', '#2', '#3', '#4', '#5', ])
        ->labelX('Achievement Test')
        ->labelY('Score')
        ->caption('Achievement Test Results in 2023')
-       ->create('img/AdjustPlotArea.png');
+       ->legends(['Donald Biden'])
+       ->create('img/AdjustDisplayByMethods.png');
     ```
 
 - Result:
 
-    <img src="examples/img/AdjustDisplay.png" width="400" />
+    <img src="examples/img/AdjustDisplayByMethods.png" width="400" />
 
 - Details:
     - Set Limits: `limit(int|float $lower, int|float $upper)`
@@ -157,24 +161,27 @@ And Setting Caption can be done as follows:
     - Set Label for Y Axis: `labelY(string $labelY)`
     - Set Caption: `caption(string $caption)`
     - Available Methods:
+
+        Note: `$colorCode` must be in `#RGB` or `#RRGGBB` format.
+
         | Method | Detail |
         | :--- | :--- |
         |resize(int $width, int $height)|Resizes Canvas Size|
-        |bgcolor(string $bgcolor)|Sets Canvas Background Color|
-        |fontColor(string $color)|Sets Font Color|
-        |axisColor(string $color)|Sets Axis Color|
-        |gridColor(string $color)|Sets Grid Color|
-        |boxBorder(int $width, string $color)|Sets Box Border Color|
-        |whisker(int $width, string $color)|Sets Whisker Width and Color|
+        |bgcolor(string $colorCode)|Sets Canvas Background Color|
+        |fontColor(string $colorCode)|Sets Font Color|
+        |axisColor(string $colorCode)|Sets Axis Color|
+        |gridColor(string $colorCode)|Sets Grid Color|
+        |boxBorder(int $width, string $colorCode)|Sets Box Border Color|
+        |whisker(int $width, string $colorCode)|Sets Whisker Width and Color|
         |gridHeightPitch(int\|float $pitch)|Sets Grid Pitch|
         |boxWidth(int $width)|Sets Box Width|
-        |boxBackground(array $colors)|Sets Box Background Color|
+        |boxBackground(array $colorCodes)|Sets Box Background Color Set|
         |labels(array $labels)|Sets Labels for Each Box|
         |labelX(string $label)|Sets Label for X Axis|
         |labelY(string $label)|Sets Label for Y Axis|
         |caption(string $caption)|Sets Caption|
         |legends(array $legends)|Sets Legend Labels|
-        |legendBgcolor(string $color)|Sets Legends Area Background Color|
+        |legendBgcolor(string $colorCode)|Sets Legends Area Background Color|
         |gridVerticalOn()|Sets Visibility of Vertical Grid On|
         |gridVerticalOff()|Sets Visibility of Vertical Grid Off|
         |outlierOn()|Sets Outlier Detection On|
@@ -185,7 +192,6 @@ And Setting Caption can be done as follows:
         |meanOff()|Sets Plotting Mean Off|
         |legendOn()|Sets Displaying Legends On|
         |legendOff()|Sets Displaying Legends Off|
-    - Note: Color Code must be in `#RGB` or `#RRGGBB` format.
 
 ### 5.3. Multiple Data Set
 
@@ -251,14 +257,13 @@ Multiple datasets can be displayed side by side at the same time.
     - `legends(array $legends)` can overwrite legends.
     - `labels(array $labels)` can overwrite labels.
 
-### 5.4. Changing Props By Neon File
+### 5.4. Adjusting the Display By Neon File
 
-You can change properties by using Neon file.
+You can adjust the display by using Neon file.
 
 First, prepare a Neon file like this:
 
-
-- Neon: [examples/ChangePropsByNeon.neon](examples/ChangePropsByNeon.neon)
+- Neon: [examples/AdjustDisplayByNeon.neon](examples/AdjustDisplayByNeon.neon)
 
     ```neon
     # Configuration for BoxplotExample.php
@@ -338,7 +343,7 @@ First, prepare a Neon file like this:
     #labels: [ '1st', '2nd', '3rd', '4th', '5th' ]
     labelX: 'Achievement Test'
     labelY: 'Score'
-    caption: 'Changing Properties By Neon File'
+    caption: 'Adjusting the Display By Neon File'
 
     legend: true
     legendBackgroundColor: '#666666'
@@ -360,7 +365,7 @@ First, prepare a Neon file like this:
 
 Second, Code PHP like this:
 
-- PHP: [examples/ChangePropsByNeon.php](examples/ChangePropsByNeon.php)
+- PHP: [examples/AdjustDisplayByNeon.php](examples/AdjustDisplayByNeon.php)
 
     ```php
     <?php
@@ -370,21 +375,21 @@ Second, Code PHP like this:
     use Macocci7\PhpBoxplot\Boxplot;
 
     $bp = new Boxplot();
-    $bp->config('ChangePropsByNeon.neon')
-       ->create('img/ChangePropsByNeon.png');
+    $bp->config('AdjustDisplayByNeon.neon')
+       ->create('img/AdjustDisplayByNeon.png');
     ```
 
 Then, run the PHP Code.
 
-- Result: [examples/img/ChangPropsByNeon.png](examples/img/ChangePropsByNeon.png)
+- Result: [examples/img/AdjustDisplyaByNeon.png](examples/img/AdjustDisplayByNeon.png)
 
-    <img src="examples/img/ChangePropsByNeon.png" width="500" />
+    <img src="examples/img/AdjustDisplayByNeon.png" width="500" />
 
-### 5.5. Changing Props By Array
+### 5.5. Adjusting the Display By Array
 
-You can change properties by using Array.
+You can Adjust the Display by using Array.
 
-- PHP: [examples/ChangePropsByArray.php](examples/ChangePropsByArray.php)
+- PHP: [examples/AdjustDisplayByArray.php](examples/AdjustDisplayByArray.php)
 
     ```php
     <?php
@@ -430,7 +435,7 @@ You can change properties by using Array.
         'mean' => true,
         'labelX' => 'Achievement Test',
         'labelY' => 'Score',
-        'caption' => 'Changing Properties By Array',
+        'caption' => 'Adjusting the Display By Array',
         'legend' => true,
         'legendBackgroundColor' => '#666666',
         'legendWidth' => 100,
@@ -439,12 +444,12 @@ You can change properties by using Array.
 
     $bp = new Boxplot();
     $bp->config($conf)
-       ->create('img/ChangePropsByArray.png');
+       ->create('img/AdjustDisplayByArray.png');
     ```
 
-- Result: [examples/img/ChangePropsByArray.png](examples/img/ChangePropsByArray.png)
+- Result: [examples/img/AdjustDisplayByArray.png](examples/img/AdjustDisplayByArray.png)
 
-    <img src="examples/img/ChangePropsByArray.png" width="500" />
+    <img src="examples/img/AdjustDisplayByArray.png" width="500" />
 
 ### 5.6. Transparent Background
 
@@ -487,15 +492,7 @@ You can set transparent background like this.
 
 - Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)
 
-    <img src="examples/img/TransparentBackground.png" width="400" onmouseover="changeBgImage(this)" />
-
-<script>
-    function changeBgImage(o) {
-        o.style.background = "linear-gradient(to top, rgba(217, 175, 217, 0.5) 0%, rgba(151, 217, 225, 0.8) 100%), url(examples/img/misaki_park.jpg)";
-        o.style.backgroundPosition = "center";
-        o.style.backgroundSize = "cover";
-    }
-</script>
+    <img src="examples/img/TransparentBackground.png" width="400" />
 
 ## Examples
 
@@ -503,23 +500,23 @@ You can set transparent background like this.
 
     <a href="examples/img/BasicUsage.png" target="_blank"><img src="examples/img/BasicUsage.png" width="300" /></a>
 
-- [AdjustDisplay.php](examples/AdjustDisplay.php) >> results in:
+- [AdjustDisplayByMethods.php](examples/AdjustDisplayByMethods.php) >> results in:
 
-    <a href="examples/img/AdjustDisplay.png" target="_blank"><img src="examples/img/AdjustDisplay.png" width="300" /></a>
+    <a href="examples/img/AdjustDisplayByMethods.png" target="_blank"><img src="examples/img/AdjustDisplayByMethods.png" width="300" /></a>
 
-- [ChangePropsByNeon.php](examples/ChangePropsByNeon.php) >> results in:
+- [AdjustDisplayByNeon.php](examples/AdjustDisplayByNeon.php) >> results in:
 
-    <a href="examples/img/ChangePropsByNeon.png" target="_blank"><img src="examples/img/ChangePropsByNeon.png" width="300" /></a>
+    <a href="examples/img/AdjustDisplayByNeon.png" target="_blank"><img src="examples/img/AdjustDisplayByNeon.png" width="300" /></a>
 
-- [ChangePropsByArray.php](examples/ChangePropsByArray.php)
+- [AdjustDisplayByArray.php](examples/AdjustDisplayByArray.php) >> results in:
 
-    <a href="examples/img/ChangePropsByArray.png" target="_blank"><img src="examples/img/ChangePropsByArray.png" width="300" /></a>
+    <a href="examples/img/AdjustDisplayByArray.png" target="_blank"><img src="examples/img/AdjustDisplayByArray.png" width="300" /></a>
 
-- [MultipleDataSet.php](examples/MultipleDataSet.php)
+- [MultipleDataSet.php](examples/MultipleDataSet.php) >> results in:
 
     <a href="examples/img/MultipleDataSet.png" target="_blank"><img src="examples/img/MultipleDataSet.png" width="300" /></a>
 
-- [TransparentBackground.php](examples/TransparentBackground.php)
+- [TransparentBackground.php](examples/TransparentBackground.php) >> results in:
 
     <a href="examples/img/TransparentBackground.png" target="_blank"><img src="examples/img/TransparentBackground.png" width="300" /></a>
 
