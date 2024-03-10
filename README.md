@@ -44,7 +44,7 @@ Transparent background is also supported.
 ## 3. Requirements
 
 - PHP 8.1 or later
-- Imagick PHP Extention
+- Imagick PHP Extension
 - Composer
 
 ## 4. Installation
@@ -153,7 +153,7 @@ And Setting Caption can be done as follows:
 - Details:
     - Set Limits: `limit(int|float $lower, int|float $upper)`
     - Set Grid Pitch: `gridHeightPitch(int|float $pitch)`
-    - Set Virtical Grid Visibility:
+    - Set Vertical Grid Visibility:
         - `gridVerticalOn()`
         - `gridVerticalOff()`
     - Set Labels: `labels(string[] $labels)`
@@ -347,7 +347,7 @@ First, prepare a Neon file like this:
 
     legend: true
     legendBackgroundColor: '#666666'
-    #legends: [ 'Jhon', 'Jake', 'Hugo', ]
+    #legends: [ 'John', 'Jake', 'Hugo', ]
     legendWidth: 100
     legendFontSize: 10
 
@@ -381,7 +381,7 @@ Second, Code PHP like this:
 
 Then, run the PHP Code.
 
-- Result: [examples/img/AdjustDisplyaByNeon.png](examples/img/AdjustDisplayByNeon.png)
+- Result: [examples/img/AdjustDisplayByNeon.png](examples/img/AdjustDisplayByNeon.png)
 
     <img src="examples/img/AdjustDisplayByNeon.png" width="500" />
 
