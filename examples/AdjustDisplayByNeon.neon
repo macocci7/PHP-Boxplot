@@ -79,7 +79,7 @@ caption: 'Adjusting the Display By Neon File'
 
 legend: true
 legendBackgroundColor: '#666666'
-#legends: [ 'Jhon', 'Jake', 'Hugo', ]
+#legends: [ 'John', 'Jake', 'Hugo', ]
 legendWidth: 100
 legendFontSize: 10
 
