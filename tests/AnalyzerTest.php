@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpBoxplot;
 
-require('vendor/autoload.php');
-
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBoxplot\Analyzer;
 
 /**
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 final class AnalyzerTest extends TestCase
 {
@@ -25,9 +24,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_limit_throw_exception_with_invalid_params
-     */
+    #[DataProvider('provide_limit_throw_exception_with_invalid_params')]
     public function test_limit_throw_exception_with_invalid_params(int|float $lower, int|float $upper): void
     {
         $a = new Analyzer();
@@ -46,9 +43,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_limit_can_set_limit_correctly
-     */
+    #[DataProvider('provide_limit_can_set_limit_correctly')]
     public function test_limit_can_set_limit_correctly(int|float $lower, int|float $upper): void
     {
         $a = new Analyzer();
@@ -75,9 +70,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_getMean_can_get_mean_correctly
-     */
+    #[DataProvider('provide_getMean_can_get_mean_correctly')]
     public function test_getMean_can_get_mean_correctly(array $data, int|float|null $expect): void
     {
         $bp = new Boxplot();
@@ -94,9 +87,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_getUcl_can_get_ucl_correctly
-     */
+    #[DataProvider('provide_getUcl_can_get_ucl_correctly')]
     public function test_getUcl_can_get_ucl_correctly(array $data, float|null $expect): void
     {
         $a = new Analyzer();
@@ -117,9 +108,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_getLcl_can_get_lcl_correctly
-     */
+    #[DataProvider('provide_getLcl_can_get_lcl_correctly')]
     public function test_getLcl_can_get_lcl_correctly(array $data, float|null $expect): void
     {
         $a = new Analyzer();
@@ -143,9 +132,7 @@ final class AnalyzerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_getOutliers_can_get_outliers_correctly
-     */
+    #[DataProvider('provide_getOutliers_can_get_outliers_correctly')]
     public function test_getOutliers_can_get_outliers_correctly(array $data, array|null $expect): void
     {
         $a = new Analyzer();

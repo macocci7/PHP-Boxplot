@@ -69,7 +69,7 @@ composer require macocci7/php-boxplot
     ```php
     <?php
 
-    require('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -97,7 +97,7 @@ composer require macocci7/php-boxplot
     - The hash keys of the data are used as the labels for the X axis.
 
 - Details:
-    - Import Autoloader: `require_once('../vendor/autoload.php')`
+    - Import Autoloader: `require_once __DIR__ . '/../vendor/autoload.php'`
     - Declare: `use Macocci7\PhpBoxplot\Boxplot`
     - Instantiate: `new Boxplot()`
     - Set Data: `setData($data)`
@@ -117,7 +117,7 @@ And Setting Caption can be done as follows:
     ```php
     <?php
 
-    require('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -202,7 +202,7 @@ Multiple datasets can be displayed side by side at the same time.
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -370,7 +370,7 @@ Second, Code PHP like this:
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -394,7 +394,7 @@ You can Adjust the Display by using Array.
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -460,7 +460,7 @@ You can set transparent background like this.
     ```php
     <?php
 
-    require_once('../vendor/autoload.php');
+    require_once __DIR__ . '/../vendor/autoload.php';
 
     use Macocci7\PhpBoxplot\Boxplot;
 
@@ -545,6 +545,6 @@ You can set transparent background like this.
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/03/09*
+*Document updated: 2024/04/18*
 
 Copyright 2023 - 2024 macocci7
