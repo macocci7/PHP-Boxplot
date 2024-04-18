@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Macocci7\PhpBoxplot\Traits;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBoxplot\Traits\JudgeTrait;
 use Nette\Neon\Neon;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
@@ -40,9 +40,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isIntAll_can_judge_correctly
-     */
+    #[DataProvider('provide_isIntAll_can_judge_correctly')]
     public function test_isIntAll_can_judge_correctly(array $items, bool $expect): void
     {
         $this->assertSame($expect, self::isIntAll($items));
@@ -71,9 +69,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isNumber_can_judge_correctly
-     */
+    #[DataProvider('provide_isNumber_can_judge_correctly')]
     public function test_isNumber_can_judge_correctly(mixed $item, bool $expect): void
     {
         $this->assertSame($expect, self::isNumber($item));
@@ -102,9 +98,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isNumbersAll_can_judge_correctly
-     */
+    #[DataProvider('provide_isNumbersAll_can_judge_correctly')]
     public function test_isNumbersAll_can_judge_correctly(mixed $items, bool $expect): void
     {
         $this->assertSame($expect, self::isNumbersAll($items));
@@ -135,9 +129,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isColorCode_can_judge_correctly
-     */
+    #[DataProvider('provide_isColorCode_can_judge_correctly')]
     public function test_isColorCode_can_judge_correctly(string $color, bool $expect): void
     {
         $this->assertSame($expect, self::isColorCode($color));
@@ -159,9 +151,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isColorCodeAll_can_judge_correctly
-     */
+    #[DataProvider('provide_isColorCodeAll_can_judge_correctly')]
     public function test_isColorCodeAll_can_judge_correctly(array $params, bool $expect): void
     {
         $this->assertSame($expect, self::isColorCodeAll($params));
@@ -248,9 +238,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isValidType_can_judge_correctly
-     */
+    #[DataProvider('provide_isValidType_can_judge_correctly')]
     public function test_isValidType_can_judge_correctly(mixed $input, string $def, bool $expect): void
     {
         $this->assertSame($expect, self::isValidType($input, $def));
@@ -286,9 +274,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isValidData_can_judge_correctly
-     */
+    #[DataProvider('provide_isValidData_can_judge_correctly')]
     public function test_isValidData_can_judge_correctly(mixed $data, bool $expect): void
     {
         $this->assertSame($expect, self::isValidData($data));
@@ -366,9 +352,7 @@ final class JudgeTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provide_isValidDataset_can_judge_correctly
-     */
+    #[DataProvider('provide_isValidDataset_can_judge_correctly')]
     public function test_isValidDataset_can_judge_correctly(mixed $dataset, bool $expect): void
     {
         $this->assertSame($expect, self::isValidDataset($dataset));

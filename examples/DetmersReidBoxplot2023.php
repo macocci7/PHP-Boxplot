@@ -2,8 +2,8 @@
 
 namespace Macocci7;
 
-require('../vendor/autoload.php');
-require('./class/CsvUtil.php');
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/class/CsvUtil.php';
 
 use Macocci7\PhpBoxplot\Boxplot;
 use Macocci7\CsvUtil;
