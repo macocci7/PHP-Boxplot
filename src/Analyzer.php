@@ -4,7 +4,6 @@ namespace Macocci7\PhpBoxplot;
 
 use Macocci7\PhpFrequencyTable\FrequencyTable;
 use Macocci7\PhpBoxplot\Helpers\Config;
-use Macocci7\PhpBoxplot\Traits\JudgeTrait;
 
 /**
  * class for analysis
@@ -13,7 +12,7 @@ use Macocci7\PhpBoxplot\Traits\JudgeTrait;
  */
 class Analyzer
 {
-    use JudgeTrait;
+    use Traits\JudgeTrait;
 
     public FrequencyTable $ft;
     /**
