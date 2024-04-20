@@ -2,12 +2,12 @@
 
 namespace Macocci7\PhpBoxplot;
 
+use Intervention\Image\Geometry\Factories\CircleFactory;
+use Intervention\Image\Geometry\Factories\LineFactory;
+use Intervention\Image\Geometry\Factories\RectangleFactory;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageInterface;
-use Intervention\Image\Geometry\Factories\LineFactory;
 use Intervention\Image\Typography\FontFactory;
-use Intervention\Image\Geometry\Factories\RectangleFactory;
-use Intervention\Image\Geometry\Factories\CircleFactory;
 use Macocci7\PhpBoxplot\Analyzer;
 use Macocci7\PhpBoxplot\Helpers\Config;
 
@@ -15,72 +15,31 @@ use Macocci7\PhpBoxplot\Helpers\Config;
  * class for analysis
  * @author  macocci7 <macocci7@yahoo.co.jp>
  * @license MIT
- * @SuppressWarnings(PHPMD.TooManyFields)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.NPathComplexity)
- * @SuppressWarnings(PHPMD.ElseExpression)
  */
 class Plotter extends Analyzer
 {
+    use Traits\StyleTrait;
+    use Traits\AttributeTrait;
+    use Traits\VisibilityTrait;
+
     protected string $imageDriver;
     protected ImageManager $imageManager;
     protected ImageInterface $image;
-    protected int $canvasWidth;
-    protected int $canvasHeight;
-    protected string|null $canvasBackgroundColor;
     protected float $frameXRatio;
     protected float $frameYRatio;
-    protected string|null $axisColor;
     protected int $axisWidth;
-    protected string|null $gridColor;
     protected int $gridWidth;
-    protected int|null $gridHeightPitch;
     protected int|float $pixGridWidth;
     protected int $gridMax;
     protected int $gridMin;
-    protected bool $gridVertical;
     protected int $boxCount;
-    protected int $boxWidth;
-    /**
-     * @var string[]    $boxBackgroundColors
-     */
-    protected array $boxBackgroundColors;
-    protected string|null $boxBorderColor;
-    protected int $boxBorderWidth;
     protected int|float $pixHeightPitch;
-    protected string|null $whiskerColor;
-    protected int $whiskerWidth;
-    protected string $fontPath;
-    protected int|float $fontSize;
-    protected string|null $fontColor;
     protected int $baseX;
     protected int $baseY;
-    protected bool $outlier;
-    protected int $outlierDiameter;
-    protected string|null $outlierColor;
-    protected bool $jitter;
-    protected string|null $jitterColor;
-    protected int $jitterDiameter;
-    protected bool $mean;
-    protected string|null $meanColor;
-    /**
-     * @var string[]    $labels
-     */
-    protected array $labels;
-    protected string $labelX;
-    protected string $labelY;
-    protected string $caption;
-    protected bool $legend;
     protected int $legendCount;
-    protected string|null $legendBackgroundColor;
-    protected int $legendWidth;
-    protected int $legendFontSize;
-    /**
-     * @var string[]    $colors
-     */
-    protected array $colors;
 
     /**
      * constructor
@@ -213,7 +172,7 @@ class Plotter extends Analyzer
         }
         // Note:
         // - If $this->labels has values, those values takes precedence.
-        // - The values of $this->labels may be set by the function labels().
+        // - The values of $this->labels may be set by the method labels().
         if (empty($this->labels)) {
             $this->labels = array_keys($this->dataSet[array_keys($this->dataSet)[0]]);
         }
@@ -224,7 +183,7 @@ class Plotter extends Analyzer
      * plots axis
      * @return  self
      */
-    public function plotAxis()
+    private function plotAxis()
     {
         // Horizontal Axis
         $x1 = (int) $this->baseX;
@@ -259,7 +218,7 @@ class Plotter extends Analyzer
      * plots grids
      * @return  self
      */
-    public function plotGrids()
+    private function plotGrids()
     {
         $this->plotGridHorizontal();
         $this->plotGridVertical();
@@ -270,7 +229,7 @@ class Plotter extends Analyzer
      * plots horizontal grids
      * @return  self
      */
-    public function plotGridHorizontal()
+    private function plotGridHorizontal()
     {
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
             $x1 = (int) $this->baseX;
@@ -293,7 +252,7 @@ class Plotter extends Analyzer
      * plots vertical grid
      * @return  self
      */
-    public function plotGridVertical()
+    private function plotGridVertical()
     {
         if (!$this->gridVertical) {
             return $this;
@@ -319,7 +278,7 @@ class Plotter extends Analyzer
      * plots grid values
      * @return  self
      */
-    public function plotGridValues()
+    private function plotGridValues()
     {
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
             $x1 = (int) ($this->baseX - $this->fontSize * 1.1);
@@ -346,7 +305,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotBox(int $index, int $legend)
+    private function plotBox(int $index, int $legend)
     {
         $gridWidth = $this->pixGridWidth;
         $legends = $this->legendCount;
@@ -373,7 +332,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotMedian(int $index, int $legend)
+    private function plotMedian(int $index, int $legend)
     {
         $gridWidth = $this->pixGridWidth;
         $legends = $this->legendCount;
@@ -399,7 +358,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotMean(int $index, int $legend)
+    private function plotMean(int $index, int $legend)
     {
         if (!$this->mean) {
             return $this;
@@ -431,7 +390,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotWhiskerUpper(int $index, int $legend)
+    private function plotWhiskerUpper(int $index, int $legend)
     {
         // upper whisker
         $gridWidth = $this->pixGridWidth;
@@ -477,7 +436,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotWhiskerLower(int $index, int $legend)
+    private function plotWhiskerLower(int $index, int $legend)
     {
         // lower whisker
         $gridWidth = $this->pixGridWidth;
@@ -523,7 +482,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotWhisker(int $index, int $legend)
+    private function plotWhisker(int $index, int $legend)
     {
         $this->plotWhiskerUpper($index, $legend);
         $this->plotWhiskerLower($index, $legend);
@@ -536,7 +495,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotOutliers(int $index, int $legend)
+    private function plotOutliers(int $index, int $legend)
     {
         if (!$this->outlier) {
             return $this;
@@ -566,7 +525,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plotJitter(int $index, int $legend)
+    private function plotJitter(int $index, int $legend)
     {
         if (!$this->jitter) {
             return $this;
@@ -602,7 +561,7 @@ class Plotter extends Analyzer
      * plots labels
      * @return  self
      */
-    public function plotLabels()
+    private function plotLabels()
     {
         if (!is_array($this->labels)) {
             return $this;
@@ -633,7 +592,7 @@ class Plotter extends Analyzer
      * plots label of X
      * @return  self
      */
-    public function plotLabelX()
+    private function plotLabelX()
     {
         $x = (int) ($this->canvasWidth / 2);
         $y = (int) ($this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
@@ -656,7 +615,7 @@ class Plotter extends Analyzer
      * plots label of Y
      * @return  self
      */
-    public function plotLabelY()
+    private function plotLabelY()
     {
         $width = $this->canvasHeight;
         $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
@@ -684,7 +643,7 @@ class Plotter extends Analyzer
      * plots caption
      * @return  self
      */
-    public function plotCaption()
+    private function plotCaption()
     {
         $x = (int) ($this->canvasWidth / 2);
         $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
@@ -707,7 +666,7 @@ class Plotter extends Analyzer
      * plots a legend
      * @return  self
      */
-    public function plotLegend()
+    private function plotLegend()
     {
         if (!$this->legend) {
             return $this;
@@ -770,7 +729,7 @@ class Plotter extends Analyzer
      * @param   int $legend
      * @return  self
      */
-    public function plot(int $index, int $legend)
+    private function plot(int $index, int $legend)
     {
         $this->plotBox($index, $legend);
         $this->plotMedian($index, $legend);
