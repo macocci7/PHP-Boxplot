@@ -2,14 +2,11 @@
 
 namespace Macocci7\PhpBoxplot;
 
-use Intervention\Image\Geometry\Factories\CircleFactory;
-use Intervention\Image\Geometry\Factories\LineFactory;
-use Intervention\Image\Geometry\Factories\RectangleFactory;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Interfaces\ImageInterface;
-use Intervention\Image\Typography\FontFactory;
 use Macocci7\PhpBoxplot\Analyzer;
 use Macocci7\PhpBoxplot\Helpers\Config;
+use Macocci7\PhpPlotter2d\Canvas;
+use Macocci7\PhpPlotter2d\Plotter as Plotter2d;
+use Macocci7\PhpPlotter2d\Transformer;
 
 /**
  * class for analysis
@@ -25,18 +22,30 @@ class Plotter extends Analyzer
     use Traits\AttributeTrait;
     use Traits\VisibilityTrait;
 
-    protected string $imageDriver;
-    protected ImageManager $imageManager;
-    protected ImageInterface $image;
+    protected Canvas $canvas;
+    protected Transformer $transformer;
+    /**
+     * @var array<string, int[]>    $viewport
+     */
+    protected array $viewport = [];
+    /**
+     * @var array{
+     *  offset: int[],
+     *  width:  int,
+     *  height: int,
+     *  backgroundColor:    string,
+     *  placeAutomatically: bool,
+     * }    $plotarea
+     */
+    protected array $plotarea;
     protected float $frameXRatio;
     protected float $frameYRatio;
     protected int $axisWidth;
     protected int $gridWidth;
-    protected int|float $pixGridWidth;
+    protected int|float|null $gridWidthPitch;
     protected int $gridMax;
     protected int $gridMin;
     protected int $boxCount;
-    protected int|float $pixHeightPitch;
     protected int $baseX;
     protected int $baseY;
     protected int $legendCount;
@@ -48,7 +57,6 @@ class Plotter extends Analyzer
     {
         parent::__construct();
         $this->loadConf();
-        $this->imageManager = ImageManager::{$this->imageDriver}();
     }
 
     /**
@@ -58,48 +66,7 @@ class Plotter extends Analyzer
     private function loadConf()
     {
         Config::load();
-        $props = [
-            'imageDriver',
-            'canvasWidth',
-            'canvasHeight',
-            'canvasBackgroundColor',
-            'frameXRatio',
-            'frameYRatio',
-            'axisColor',
-            'axisWidth',
-            'gridColor',
-            'gridWidth',
-            'gridHeightPitch',
-            'gridVertical',
-            'boxWidth',
-            'boxBackgroundColors',
-            'boxBorderColor',
-            'boxBorderWidth',
-            'whiskerColor',
-            'whiskerWidth',
-            'fontPath',
-            'fontSize',
-            'fontColor',
-            'outlier',
-            'outlierDiameter',
-            'outlierColor',
-            'jitter',
-            'jitterColor',
-            'jitterDiameter',
-            'mean',
-            'meanColor',
-            'labels',
-            'labelX',
-            'labelY',
-            'caption',
-            'legend',
-            'legendBackgroundColor',
-            'legends',
-            'legendWidth',
-            'legendFontSize',
-            'colors',
-        ];
-        foreach ($props as $prop) {
+        foreach (array_keys(Config::get('validConfig')) as $prop) {
             $this->{$prop} = Config::get($prop);
         }
     }
@@ -119,8 +86,6 @@ class Plotter extends Analyzer
             $counts[] = count($values);
         }
         $this->boxCount = max($counts);
-        $this->baseX = (int) ($this->canvasWidth * (1 - $this->frameXRatio) * 3 / 4);
-        $this->baseY = (int) ($this->canvasHeight * (1 + $this->frameYRatio) / 2);
         $maxValues = [];
         foreach ($this->dataSet as $data) {
             foreach ($data as $key => $values) {
@@ -151,7 +116,76 @@ class Plotter extends Analyzer
         // - This value should be set appropriately: 10% of $gridHeightSpan in this case.
         $clsasRange = ((int) ($gridHeightSpan * 10)) / 100;
         $this->ft->setClassRange($clsasRange);
-        $this->pixHeightPitch = $this->canvasHeight * $this->frameYRatio / ($this->gridMax - $this->gridMin);
+
+        $this->setDefaultPlotarea();
+        $this->setDefaultViewport();
+        $this->adjustGridHeightPitch($gridHeightSpan);
+        $this->createCanvas();
+
+        // Note:
+        // - If $this->labels has values, those values takes precedence.
+        // - The values of $this->labels may be set by the method labels().
+        if (empty($this->labels)) {
+            $this->labels = array_keys($this->dataSet[array_keys($this->dataSet)[0]]);
+        }
+        return $this;
+    }
+
+    /**
+     * sets default viewport
+     */
+    private function setDefaultViewport(): void
+    {
+        $xMin = 0;
+        $xMax = max(array_map(fn ($e) => count($e), $this->dataSet));
+        $yMin = $this->gridMin;
+        $yMax = $this->gridMax;
+
+        $this->viewport = [
+            'x' => [$xMin, $xMax],
+            'y' => [$yMin, $yMax],
+        ];
+    }
+
+    /**
+     * sets default plotarea
+     */
+    private function setDefaultPlotarea(): void
+    {
+        $plotarea = $this->plotarea;
+        if (!array_key_exists('offset', $plotarea)) {
+            $plotarea['offset'] = [
+                (int) round(
+                    $this->canvasWidth * (1 - $this->frameXRatio) * 3 / 4
+                ),
+                (int) round(
+                    $this->canvasHeight * (1 - $this->frameYRatio) / 2
+                ),
+            ];
+        }
+        if (!array_key_exists('width', $plotarea)) {
+            $plotarea['width'] = (int) round(
+                $this->canvasWidth * $this->frameXRatio
+            );
+        }
+        if (!array_key_exists('height', $plotarea)) {
+            $plotarea['height'] = (int) round(
+                $this->canvasHeight * $this->frameYRatio
+            );
+        }
+        if (!array_key_exists('placeAutomatically', $plotarea)) {
+            $plotarea['placeAutomatically'] = false;
+        }
+        $this->plotarea = $plotarea;
+    }
+
+    /**
+     * adjusts gridHeightPitch
+     *
+     * @param   float   $gridHeightSpan
+     */
+    private function adjustGridHeightPitch(float $gridHeightSpan): void
+    {
         // Note:
         // - If $this->gridHeightPitch has a value, that value takes precedence.
         // - The value of $this->girdHeightPitch may be set by the funciton gridHeightPitch().
@@ -164,19 +198,26 @@ class Plotter extends Analyzer
                 $this->gridHeightPitch = ( (int) (0.200 * $gridHeightSpan * 10)) / 10;
             }
         }
-        $this->pixGridWidth = $this->canvasWidth * $this->frameXRatio / $this->boxCount;
-        // Creating an instance of intervention/image.
-        $this->image = $this->imageManager->create($this->canvasWidth, $this->canvasHeight);
-        if ($this->isColorCode($this->canvasBackgroundColor)) {
-            $this->image = $this->image->fill($this->canvasBackgroundColor);
-        }
-        // Note:
-        // - If $this->labels has values, those values takes precedence.
-        // - The values of $this->labels may be set by the method labels().
-        if (empty($this->labels)) {
-            $this->labels = array_keys($this->dataSet[array_keys($this->dataSet)[0]]);
-        }
-        return $this;
+    }
+
+    /**
+     * creates canvas
+     */
+    private function createCanvas(): void
+    {
+        $this->canvas = Plotter2d::make(
+            canvasSize: [
+                'width' => $this->canvasWidth,
+                'height' => $this->canvasHeight,
+            ],
+            viewport: $this->viewport,
+            plotarea: $this->plotarea,
+            backgroundColor: $this->canvasBackgroundColor,
+        );
+        $this->transformer = new Transformer(
+            viewport: $this->viewport,
+            plotarea: $this->plotarea,
+        );
     }
 
     /**
@@ -185,31 +226,34 @@ class Plotter extends Analyzer
      */
     private function plotAxis()
     {
-        // Horizontal Axis
-        $x1 = (int) $this->baseX;
-        $y1 = (int) $this->baseY;
-        $x2 = (int) ($this->canvasWidth * (3 + $this->frameXRatio) / 4);
-        $y2 = (int) $this->baseY;
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->axisColor);
-                $line->width($this->axisWidth);
-            }
+        if (!$this->showAxis) {
+            return $this;
+        }
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
+        $x1 = $offsetX;
+        $y1 = $this->plotarea['height'] + $offsetY;
+        $x2 = $x1;
+        $y2 = $offsetY;
+        $this->canvas->drawLine(
+            x1: $x1,
+            y1: $y1,
+            x2: $x2,
+            y2: $y2,
+            width: $this->axisWidth,
+            color: $this->axisColor,
         );
-        // Vertical Axis
-        $x1 = (int) $this->baseX;
-        $y1 = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 2);
-        $x2 = (int) $this->baseX;
-        $y2 = (int) $this->baseY;
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->axisColor);
-                $line->width($this->axisWidth);
-            }
+        // plot x-axis
+        $x1 = $offsetX;
+        $y1 = $this->plotarea['height'] + $offsetY;
+        $x2 = $this->plotarea['width'] + $offsetX;
+        $y2 = $y1;
+        $this->canvas->drawLine(
+            x1: $x1,
+            y1: $y1,
+            x2: $x2,
+            y2: $y2,
+            width: $this->axisWidth,
+            color: $this->axisColor,
         );
         return $this;
     }
@@ -231,18 +275,19 @@ class Plotter extends Analyzer
      */
     private function plotGridHorizontal()
     {
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
-            $x1 = (int) $this->baseX;
-            $y1 = (int) ($this->baseY - ($y - $this->gridMin) * $this->pixHeightPitch);
-            $x2 = (int) ($this->canvasWidth * (3 + $this->frameXRatio) / 4);
-            $y2 = (int) $y1;
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->gridColor);
-                    $line->width($this->gridWidth);
-                }
+            [[$x1, $y1], [$x2, $y2]] = $this->transformer->getCoords([
+                [0, $y],
+                [$this->viewport['x'][1], $y],
+            ]);
+            $this->canvas->drawLine(
+                x1: $x1 + $offsetX,
+                y1: $y1 + $offsetY,
+                x2: $x2 + $offsetX,
+                y2: $y2 + $offsetY,
+                width: $this->gridWidth,
+                color: $this->gridColor,
             );
         }
         return $this;
@@ -257,18 +302,21 @@ class Plotter extends Analyzer
         if (!$this->gridVertical) {
             return $this;
         }
-        for ($i = 1; $i <= $this->boxCount; $i++) {
-            $x1 = (int) ($this->baseX + $i * $this->pixGridWidth);
-            $y1 = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 2);
-            $x2 = (int) $x1;
-            $y2 = (int) ($this->canvasHeight * (1 + $this->frameYRatio) / 2);
-            $this->image->drawLine(
-                function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                    $line->from($x1, $y1);
-                    $line->to($x2, $y2);
-                    $line->color($this->gridColor);
-                    $line->width($this->gridWidth);
-                }
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
+        [$xMin, $xMax] = $this->viewport['x'];
+        [$yMin, $yMax] = $this->viewport['y'];
+        for ($x = $xMin; $x <= $xMax; $x++) {
+            [[$x1, $y1], [$x2, $y2]] = $this->transformer->getCoords([
+                [$x, $yMin],
+                [$x, $yMax],
+            ]);
+            $this->canvas->drawLine(
+                x1: $x1 + $offsetX,
+                y1: $y1 + $offsetY,
+                x2: $x2 + $offsetX,
+                y2: $y2 + $offsetY,
+                width: $this->gridWidth,
+                color: $this->gridColor,
             );
         }
         return $this;
@@ -280,20 +328,18 @@ class Plotter extends Analyzer
      */
     private function plotGridValues()
     {
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
-            $x1 = (int) ($this->baseX - $this->fontSize * 1.1);
-            $y1 = (int) ($this->baseY - ($y - $this->gridMin) * $this->pixHeightPitch + $this->fontSize * 0.4);
-            $this->image->text(
-                (string) $y,
-                $x1,
-                $y1,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->size($this->fontSize);
-                    $font->color($this->fontColor);
-                    $font->align('center');
-                    $font->valign('bottom');
-                }
+            [[$x1, $y1]] = $this->transformer->getCoords([[0, $y]]);
+            $this->canvas->drawText(
+                text: (string) $y,
+                x: $x1 + $offsetX - 8,
+                y: $y1 + $offsetY,
+                fontSize: $this->fontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'right',
+                valign: 'middle',
             );
         }
         return $this;
@@ -307,21 +353,23 @@ class Plotter extends Analyzer
      */
     private function plotBox(int $index, int $legend)
     {
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
+        $rateX = $this->transformer->getRateX();
+        $boxWidth = $this->boxWidth / $rateX;
         $legends = $this->legendCount;
-        $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth - 0.5 * $this->boxWidth;
-        $x1 = (int) ($this->baseX + $offsetX);
-        $y1 = (int) ($this->baseY - ($this->parsed['ThirdQuartile'] - $this->gridMin) * $this->pixHeightPitch);
-        $x2 = (int) ($x1 + $this->boxWidth);
-        $y2 = (int) ($this->baseY - ($this->parsed['FirstQuartile'] - $this->gridMin) * $this->pixHeightPitch);
-        $this->image->drawRectangle(
-            $x1,
-            $y1,
-            function (RectangleFactory $rectangle) use ($legend, $x1, $y1, $x2, $y2) {
-                $rectangle->size($x2 - $x1, $y2 - $y1);
-                $rectangle->background($this->boxBackgroundColors[$legend]);
-                $rectangle->border($this->boxBorderColor, $this->boxBorderWidth);
-            }
+        $offsetXL = ($legend + 0.5) / $legends - 0.5 * $boxWidth;
+        [[$x1, $y1], [$x2, $y2]] = $this->transformer->getCoords([
+            [$index + $offsetXL, $this->parsed['ThirdQuartile']],
+            [$index + $offsetXL + $boxWidth, $this->parsed['FirstQuartile']],
+        ]);
+        $this->canvas->drawBox(
+            x1: $x1 + $offsetX,
+            y1: $y1 + $offsetY,
+            x2: $x2 + $offsetX,
+            y2: $y2 + $offsetY,
+            backgroundColor: $this->boxBackgroundColors[$legend],
+            borderWidth: $this->boxBorderWidth,
+            borderColor: $this->boxBorderColor,
         );
         return $this;
     }
@@ -334,20 +382,22 @@ class Plotter extends Analyzer
      */
     private function plotMedian(int $index, int $legend)
     {
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
-        $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth - 0.5 * $this->boxWidth;
-        $x1 = (int) ($this->baseX + $offsetX);
-        $y1 = (int) ($this->baseY - ($this->parsed['Median'] - $this->gridMin) * $this->pixHeightPitch);
-        $x2 = (int) ($x1 + $this->boxWidth);
-        $y2 = (int) $y1;
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->boxBorderColor);
-                $line->width($this->boxBorderWidth);
-            }
+        $rateX = $this->transformer->getRateX();
+        $boxWidth = $this->boxWidth / $rateX;
+        $offsetXL = ($legend + 0.5) / $legends - 0.5 * $boxWidth;
+        [[$x1, $y1], [$x2, $y2]] = $this->transformer->getCoords([
+            [$index + $offsetXL, $this->parsed['Median']],
+            [$index + $offsetXL + $boxWidth, $this->parsed['Median']],
+        ]);
+        $this->canvas->drawLine(
+            x1: $x1 + $offsetX,
+            y1: $y1 + $offsetY,
+            x2: $x2 + $offsetX,
+            y2: $y2 + $offsetY,
+            width: $this->boxBorderWidth,
+            color: $this->boxBorderColor,
         );
         return $this;
     }
@@ -363,23 +413,23 @@ class Plotter extends Analyzer
         if (!$this->mean) {
             return $this;
         }
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $mean = $this->getMean($this->parsed['data']);
-        $gridWidth = $this->pixGridWidth;
         $legends = $this->legendCount;
-        $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth;
-        $x = (int) ($this->baseX + $offsetX);
-        $y = (int) $this->baseY - ($mean - $this->gridMin) * $this->pixHeightPitch;
-        $this->image->text(
-            '+',
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->meanColor);
-                $font->align('center');
-                $font->valign('center');
-            }
+        $offsetXL = ($legend + 0.5) / $legends;
+        ['x' => $x, 'y' => $y] = $this->transformer->getCoord(
+            $index + $offsetXL,
+            $mean,
+        );
+        $this->canvas->drawText(
+            text: '+',
+            x: $x + $offsetX,
+            y: $y + $offsetY,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->meanColor,
+            align: 'center',
+            valign: 'middle',
         );
         return $this;
     }
@@ -393,39 +443,49 @@ class Plotter extends Analyzer
     private function plotWhiskerUpper(int $index, int $legend)
     {
         // upper whisker
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
-        $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth;
-        $x1 = (int) ($this->baseX + $offsetX);
+        $offsetXL = ($legend + 0.5) / $legends;
+        $x1 = $index +  $offsetXL;
         if ($this->outlier) {
             $max = $this->parsed['Max'];
             $ucl = $this->getUcl();
             $max = ($ucl > $max) ? $max : $ucl;
-            $y1 = (int) ($this->baseY - ($max - $this->gridMin) * $this->pixHeightPitch);
+            $y1 = $max;
         } else {
-            $y1 = (int) ($this->baseY - ($this->parsed['Max'] - $this->gridMin) * $this->pixHeightPitch);
+            $y1 = $this->parsed['Max'];
         }
-        $x2 = (int) $x1;
-        $y2 = (int) ($this->baseY - ($this->parsed['ThirdQuartile'] - $this->gridMin) * $this->pixHeightPitch);
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->whiskerColor);
-                $line->width($this->whiskerWidth);
-            }
+        $x2 = $x1;
+        $y2 = $this->parsed['ThirdQuartile'];
+        [[$tx1, $ty1], [$tx2, $ty2]] = $this->transformer->getCoords([
+            [$x1, $y1],
+            [$x2, $y2],
+        ]);
+        $this->canvas->drawLine(
+            x1: $tx1 + $offsetX,
+            y1: $ty1 + $offsetY,
+            x2: $tx2 + $offsetX,
+            y2: $ty2 + $offsetY,
+            width: $this->whiskerWidth,
+            color: $this->whiskerColor,
         );
         // top bar
-        $x1 = (int) ($x1 - $this->boxWidth / 4);
-        $x2 = (int) ($x1 + $this->boxWidth / 2);
-        $y2 = (int) $y1;
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->whiskerColor);
-                $line->width($this->whiskerWidth);
-            }
+        $rateX = $this->transformer->getRateX();
+        $boxWidth = $this->boxWidth / $rateX;
+        $x1 = $x1 - $boxWidth / 4;
+        $x2 = $x1 + $boxWidth / 2;
+        $y2 = $y1;
+        [[$tx1, $ty1], [$tx2, $ty2]] = $this->transformer->getCoords([
+            [$x1, $y1],
+            [$x2, $y2],
+        ]);
+        $this->canvas->drawLine(
+            x1: $tx1 + $offsetX,
+            y1: $ty1 + $offsetY,
+            x2: $tx2 + $offsetX,
+            y2: $ty2 + $offsetY,
+            width: $this->whiskerWidth,
+            color: $this->whiskerColor,
         );
         return $this;
     }
@@ -439,39 +499,49 @@ class Plotter extends Analyzer
     private function plotWhiskerLower(int $index, int $legend)
     {
         // lower whisker
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
-        $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth;
-        $x1 = (int) ($this->baseX + $offsetX);
-        $y1 = (int) ($this->baseY - ($this->parsed['FirstQuartile'] - $this->gridMin) * $this->pixHeightPitch);
-        $x2 = (int) $x1;
+        $offsetXL = ($legend + 0.5) / $legends;
+        $x1 = $index + $offsetXL;
+        $y1 = $this->parsed['FirstQuartile'];
+        $x2 = $x1;
         if ($this->outlier) {
             $min = $this->parsed['Min'];
             $lcl = $this->getLcl();
             $min = ($lcl < $min) ? $min : $lcl;
-            $y2 = (int) ($this->baseY - ($min - $this->gridMin) * $this->pixHeightPitch);
+            $y2 = $min;
         } else {
-            $y2 = (int) ($this->baseY - ($this->parsed['Min'] - $this->gridMin) * $this->pixHeightPitch);
+            $y2 = $this->parsed['Min'];
         }
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->whiskerColor);
-                $line->width($this->whiskerWidth);
-            }
+        [[$tx1, $ty1], [$tx2, $ty2]] = $this->transformer->getCoords([
+            [$x1, $y1],
+            [$x2, $y2],
+        ]);
+        $this->canvas->drawLine(
+            x1: $tx1 + $offsetX,
+            y1: $ty1 + $offsetY,
+            x2: $tx2 + $offsetX,
+            y2: $ty2 + $offsetY,
+            width: $this->whiskerWidth,
+            color: $this->whiskerColor,
         );
         // bottom bar
-        $x1 = (int) ($x1 - $this->boxWidth / 4);
-        $y1 = (int) $y2;
-        $x2 = (int) ($x1 + $this->boxWidth / 2);
-        $this->image->drawLine(
-            function (LineFactory $line) use ($x1, $y1, $x2, $y2) {
-                $line->from($x1, $y1);
-                $line->to($x2, $y2);
-                $line->color($this->whiskerColor);
-                $line->width($this->whiskerWidth);
-            }
+        $rateX = $this->transformer->getRateX();
+        $boxWidth = $this->boxWidth / $rateX;
+        $x1 = $x1 - $boxWidth / 4;
+        $y1 = $y2;
+        $x2 = $x1 + $boxWidth / 2;
+        [[$tx1, $ty1], [$tx2, $ty2]] = $this->transformer->getCoords([
+            [$x1, $y1],
+            [$x2, $y2],
+        ]);
+        $this->canvas->drawLine(
+            x1: $tx1 + $offsetX,
+            y1: $ty1 + $offsetY,
+            x2: $tx2 + $offsetX,
+            y2: $ty2 + $offsetY,
+            width: $this->whiskerWidth,
+            color: $this->whiskerColor,
         );
         return $this;
     }
@@ -500,20 +570,21 @@ class Plotter extends Analyzer
         if (!$this->outlier) {
             return $this;
         }
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
         foreach ($this->getOutliers() as $outlier) {
-            $offsetX = ($index + ($legend + 0.5) / $legends) * $gridWidth;
-            $x = (int) ($this->baseX + $offsetX);
-            $y = (int) ($this->baseY - ($outlier - $this->gridMin) * $this->pixHeightPitch);
-            $this->image->drawCircle(
-                $x,
-                $y,
-                function (CircleFactory $circle) {
-                    $circle->radius((int) ($this->outlierDiameter / 2));
-                    $circle->background($this->outlierColor);
-                    $circle->border($this->outlierColor, 1);
-                }
+            $offsetXL = ($legend + 0.5) / $legends;
+            ['x' => $x, 'y' => $y] = $this->transformer->getCoord(
+                $index + $offsetXL,
+                $outlier,
+            );
+            $this->canvas->drawCircle(
+                x: $x + $offsetX,
+                y: $y + $offsetY,
+                radius: (int) ($this->outlierDiameter / 2),
+                backgroundColor: $this->outlierColor,
+                borderWidth: 1,
+                borderColor: $this->outlierColor,
             );
         }
         return $this;
@@ -537,21 +608,24 @@ class Plotter extends Analyzer
         if (empty($data)) {
             return $this;
         }
-        $gridWidth = $this->pixGridWidth;
+        [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
-        $baseX = $this->baseX + ($index + ($legend + 0.5) / $legends) * $gridWidth - $this->boxWidth / 2;
-        $pitchX = $this->boxWidth / count($data);
+        $rateX = $this->transformer->getRateX();
+        $boxWidth = $this->boxWidth / $rateX;
+        $baseX = $index + ($legend + 0.5) / $legends - $boxWidth / 2;
+        $pitchX = $boxWidth / count($data);
         foreach ($data as $key => $value) {
-            $x = (int) ($baseX + $key * $pitchX);
-            $y = (int) ($this->baseY - ($value - $this->gridMin) * $this->pixHeightPitch);
-            $this->image->drawCircle(
-                $x,
-                $y,
-                function (CircleFactory $circle) {
-                    $circle->radius((int) ($this->jitterDiameter / 2));
-                    $circle->background($this->jitterColor);
-                    $circle->border($this->jitterColor, 1);
-                }
+            ['x' => $x, 'y' => $y] = $this->transformer->getCoord(
+                $baseX + $key * $pitchX,
+                $value,
+            );
+            $this->canvas->drawCircle(
+                x: $x + $offsetX,
+                y: $y + $offsetY,
+                radius: (int) ($this->jitterDiameter / 2),
+                backgroundColor: $this->jitterColor,
+                borderWidth: 1,
+                borderColor: $this->jitterColor,
             );
         }
         return $this;
@@ -566,23 +640,25 @@ class Plotter extends Analyzer
         if (!is_array($this->labels)) {
             return $this;
         }
+        $offset = $this->plotarea['offset'];
+        $baseX = $offset[0];
+        $baseY = $this->plotarea['height'] + $offset[1];
+        $gridSpanX = $this->transformer->getSpanX(1);
         foreach ($this->labels as $index => $label) {
             if (!is_string($label) && !is_numeric($label)) {
                 continue;
             }
-            $x = (int) ($this->baseX + ($index + 0.5) * $this->pixGridWidth);
-            $y = (int) ($this->baseY + $this->fontSize * 1.2);
-            $this->image->text(
-                (string) $label,
-                $x,
-                $y,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->size($this->fontSize);
-                    $font->color($this->fontColor);
-                    $font->align('center');
-                    $font->valign('bottom');
-                }
+            $x = (int) ($baseX + ($index + 0.5) * $gridSpanX);
+            $y = (int) ($baseY + $this->fontSize * 1.2);
+            $this->canvas->drawText(
+                text: (string) $label,
+                x: $x,
+                y: $y,
+                fontSize: $this->fontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'center',
+                valign: 'bottom',
             );
         }
         return $this;
@@ -594,19 +670,20 @@ class Plotter extends Analyzer
      */
     private function plotLabelX()
     {
+        $coord = $this->transformer->getCoord(0, 0);
+        $offset = $this->plotarea['offset'];
+        $baseY = $coord['y'] + $offset[1];
         $x = (int) ($this->canvasWidth / 2);
-        $y = (int) ($this->baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
-        $this->image->text(
-            (string) $this->labelX,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        $y = (int) ($baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
+        $this->canvas->drawText(
+            text: (string) $this->labelX,
+            x: $x,
+            y: $y,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'bottom',
         );
         return $this;
     }
@@ -619,23 +696,21 @@ class Plotter extends Analyzer
     {
         $width = $this->canvasHeight;
         $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
-        $image = $this->imageManager->create($width, $height);
         $x = $width / 2;
         $y = ($height + $this->fontSize) / 2;
-        $image->text(
-            (string) $this->labelY,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        $this->canvas->drawText(
+            text: (string) $this->labelY,
+            x: $x,
+            y: $y,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'bottom',
+            angle: 90.0,
+            rotateAlign: 'left',
+            rotateValign: 'bottom',
         );
-        $image->rotate(90);
-        $this->image->place($image, 'left');
         return $this;
     }
 
@@ -647,17 +722,15 @@ class Plotter extends Analyzer
     {
         $x = (int) ($this->canvasWidth / 2);
         $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
-        $this->image->text(
-            (string) $this->caption,
-            $x,
-            $y,
-            function (FontFactory $font) {
-                $font->filename($this->fontPath);
-                $font->size($this->fontSize);
-                $font->color($this->fontColor);
-                $font->align('center');
-                $font->valign('bottom');
-            }
+        $this->canvas->drawText(
+            text: (string) $this->caption,
+            x: $x,
+            y: $y,
+            fontSize: $this->fontSize,
+            fontPath: $this->fontPath,
+            fontColor: $this->fontColor,
+            align: 'center',
+            valign: 'bottom',
         );
         return $this;
     }
@@ -677,14 +750,14 @@ class Plotter extends Analyzer
         $y1 = $baseY;
         $x2 = $x1 + $this->legendWidth;
         $y2 = (int) ($y1 + $this->legendFontSize * 1.2 * $this->legendCount + 8);
-        $this->image->drawRectangle(
-            $x1,
-            $y1,
-            function (RectangleFactory $rectangle) use ($x1, $y1, $x2, $y2) {
-                $rectangle->size($x2 - $x1, $y2 - $y1);
-                $rectangle->background($this->legendBackgroundColor);
-                $rectangle->border($this->boxBorderColor, $this->boxBorderWidth);
-            }
+        $this->canvas->drawBox(
+            x1: $x1,
+            y1: $y1,
+            x2: $x2,
+            y2: $y2,
+            backgroundColor: $this->legendBackgroundColor,
+            borderWidth: $this->boxBorderWidth,
+            borderColor: $this->boxBorderColor,
         );
         for ($i = 0; $i < $this->legendCount; $i++) {
             if (empty($this->legends[$i])) {
@@ -696,28 +769,26 @@ class Plotter extends Analyzer
             $y1 = (int) ($baseY + $i * $this->legendFontSize * 1.2 + 4);
             $x2 = (int) ($x1 + 20);
             $y2 = (int) ($y1 + $this->legendFontSize);
-            $this->image->drawRectangle(
-                $x1,
-                $y1,
-                function (RectangleFactory $rectangle) use ($i, $x1, $y1, $x2, $y2) {
-                    $rectangle->size($x2 - $x1, $y2 - $y1);
-                    $rectangle->background($this->boxBackgroundColors[$i]);
-                    $rectangle->border($this->boxBorderColor, $this->boxBorderWidth);
-                }
+            $this->canvas->drawBox(
+                x1: $x1,
+                y1: $y1,
+                x2: $x2,
+                y2: $y2,
+                backgroundColor: $this->boxBackgroundColors[$i],
+                borderWidth: $this->boxBorderWidth,
+                borderColor: $this->boxBorderColor,
             );
             $x = $x2 + 4;
             $y = $y1;
-            $this->image->text(
-                $label,
-                $x,
-                $y,
-                function (FontFactory $font) {
-                    $font->filename($this->fontPath);
-                    $font->size($this->legendFontSize);
-                    $font->color($this->fontColor);
-                    $font->align('left');
-                    $font->valign('top');
-                }
+            $this->canvas->drawText(
+                text: (string) $label,
+                x: $x,
+                y: $y,
+                fontSize: $this->legendFontSize,
+                fontPath: $this->fontPath,
+                fontColor: $this->fontColor,
+                align: 'left',
+                valign: 'top',
             );
         }
         return $this;
@@ -777,7 +848,7 @@ class Plotter extends Analyzer
         $this->plotLabelY();
         $this->plotCaption();
         $this->plotLegend();
-        $this->image->save($filePath);
+        $this->canvas->save($filePath);
         return $this;
     }
 }

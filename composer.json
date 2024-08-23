@@ -1,14 +1,14 @@
 {
     "name": "macocci7/php-boxplot",
-    "version": "1.2.2",
+    "version": "1.3.0",
     "description": "it's easy to use for creating boxplots.",
     "type": "library",
     "require": {
         "php": ">=8.1",
-        "intervention/image": "^3.7",
-        "macocci7/php-frequency-table": "^1.3",
+        "macocci7/php-frequency-table": "^1.4",
         "fakerphp/faker": "^1.23",
-        "nette/neon": "^3.4"
+        "nette/neon": "^3.4",
+        "macocci7/php-plotter2d": "^0.3"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.7",

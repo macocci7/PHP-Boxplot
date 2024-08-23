@@ -4,6 +4,7 @@ namespace Macocci7\PhpBoxplot\Traits;
 
 trait VisibilityTrait
 {
+    protected bool $showAxis;
     protected bool $gridVertical;
     protected bool $outlier;
     protected bool $jitter;

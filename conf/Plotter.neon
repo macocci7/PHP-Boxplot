@@ -1,18 +1,19 @@
 # Configurantion for Macocci7\PhpBoxplot\Plotter
 
-#imageDriver: 'gd'
-imageDriver: 'imagick'
-
 canvasWidth: 600
 canvasHeight: 500
 canvasBackgroundColor: '#ffffff'
+plotarea:
+    backgroundColor:
 frameXRatio: 0.8
 frameYRatio: 0.7
+showAxis: true
 axisColor: '#666666'
 axisWidth: 1
 gridColor: '#999999'
 gridWidth: 1
 gridHeightPitch: null
+gridWidthPitch: null
 gridVertical: false
 boxWidth: 20
 boxBackgroundColors: []
@@ -52,18 +53,20 @@ colors:
     - '#cc99cc'
 
 validConfig:
-    imageDriver:
-        type: string
     canvasWidth:
         type: int
     canvasHeight:
         type: int
     canvasBackgroundColor:
         type: colorCode|null
+    plotarea:
+        type: array
     frameXRatio:
         type: float
     frameYRatio:
         type: float
+    showAxis:
+        type: bool
     axisColor:
         type: colorCode|null
     axisWidth:
@@ -73,12 +76,14 @@ validConfig:
     gridWidth:
         type: int
     gridHeightPitch:
-        type: int|null
+        type: number|null
+    gridWidthPitch:
+        type: number|null
     gridVertical:
         type: bool
     boxWidth:
         type: int
-    boxBackgroundColor:
+    boxBackgroundColors:
         type: array
     boxBorderColor:
         type: colorCode|null
