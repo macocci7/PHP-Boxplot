@@ -12,9 +12,6 @@ use Macocci7\PhpPlotter2d\Transformer;
  * class for analysis
  * @author  macocci7 <macocci7@yahoo.co.jp>
  * @license MIT
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.NPathComplexity)
  */
 class Plotter extends Analyzer
 {
@@ -192,10 +189,10 @@ class Plotter extends Analyzer
         if (!$this->gridHeightPitch) {
             $this->gridHeightPitch = 1;
             if ($this->gridHeightPitch < 0.125 * $gridHeightSpan) {
-                $this->gridHeightPitch = ( (int) (0.125 * $gridHeightSpan * 10)) / 10;
+                $this->gridHeightPitch = (int) (( (int) (0.125 * $gridHeightSpan * 10)) / 10);
             }
             if ($this->gridHeightPitch > 0.2 * $gridHeightSpan) {
-                $this->gridHeightPitch = ( (int) (0.200 * $gridHeightSpan * 10)) / 10;
+                $this->gridHeightPitch = (int) (( (int) (0.200 * $gridHeightSpan * 10)) / 10);
             }
         }
     }
@@ -211,12 +208,12 @@ class Plotter extends Analyzer
                 'height' => $this->canvasHeight,
             ],
             viewport: $this->viewport,
-            plotarea: $this->plotarea,
+            plotarea: $this->plotarea,  // @phpstan-ignore-line
             backgroundColor: $this->canvasBackgroundColor,
         );
         $this->transformer = new Transformer(
             viewport: $this->viewport,
-            plotarea: $this->plotarea,
+            plotarea: $this->plotarea,  // @phpstan-ignore-line
         );
     }
 
@@ -637,7 +634,7 @@ class Plotter extends Analyzer
      */
     private function plotLabels()
     {
-        if (!is_array($this->labels)) {
+        if (empty($this->labels)) {
             return $this;
         }
         $offset = $this->plotarea['offset'];
@@ -648,8 +645,8 @@ class Plotter extends Analyzer
             if (!is_string($label) && !is_numeric($label)) {
                 continue;
             }
-            $x = (int) ($baseX + ($index + 0.5) * $gridSpanX);
-            $y = (int) ($baseY + $this->fontSize * 1.2);
+            $x = (int) round($baseX + ($index + 0.5) * $gridSpanX);
+            $y = (int) round($baseY + $this->fontSize * 1.2);
             $this->canvas->drawText(
                 text: (string) $label,
                 x: $x,
@@ -673,8 +670,8 @@ class Plotter extends Analyzer
         $coord = $this->transformer->getCoord(0, 0);
         $offset = $this->plotarea['offset'];
         $baseY = $coord['y'] + $offset[1];
-        $x = (int) ($this->canvasWidth / 2);
-        $y = (int) ($baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
+        $x = (int) round($this->canvasWidth / 2);
+        $y = (int) round($baseY + (1 - $this->frameYRatio) * $this->canvasHeight / 3);
         $this->canvas->drawText(
             text: (string) $this->labelX,
             x: $x,
@@ -696,8 +693,8 @@ class Plotter extends Analyzer
     {
         $width = $this->canvasHeight;
         $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
-        $x = $width / 2;
-        $y = ($height + $this->fontSize) / 2;
+        $x = (int) round($width / 2);
+        $y = (int) round(($height + $this->fontSize) / 2);
         $this->canvas->drawText(
             text: (string) $this->labelY,
             x: $x,
@@ -821,9 +818,6 @@ class Plotter extends Analyzer
     {
         if (strlen($filePath) === 0) {
             throw new \Exception("empty string specified for file path.");
-        }
-        if (!is_array($this->dataSet)) {
-            throw new \Exception('Invalid type of property: Plotter::$data array expected.');
         }
         if (empty($this->dataSet)) {
             throw new \Exception("Empty data specified.");

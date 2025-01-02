@@ -45,6 +45,11 @@ Transparent background is also supported.
 
 - PHP 8.1 or later
 - Imagick PHP Extension
+
+    Check with commands:
+    ```bash
+    php -i | grep imagick
+    ```
 - Composer
 
 ## 4. Installation
@@ -545,6 +550,6 @@ You can set transparent background like this.
 
 *Document created: 2023/05/28*
 
-*Document updated: 2024/04/18*
+*Document updated: 2025/01/02*
 
-Copyright 2023 - 2024 macocci7
+Copyright 2023 - 2025 macocci7

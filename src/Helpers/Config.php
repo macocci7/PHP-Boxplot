@@ -9,7 +9,6 @@ use Nette\Neon\Neon;
  * Config operator.
  * @author  macocci7 <macocci7@yahoo.co.jp>
  * @license MIT
- * @SuppressWarnings(PHPMD.ElseExpression)
  */
 class Config
 {
