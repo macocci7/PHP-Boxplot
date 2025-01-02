@@ -22,7 +22,7 @@ class Analyzer
     /**
      * @var array<string, mixed>    $parsed
      */
-    public array $parsed;
+    public array $parsed = [];
     protected int|float $limitUpper;
     protected int|float $limitLower;
     /**
@@ -150,9 +150,6 @@ class Analyzer
      */
     public function getUcl()
     {
-        if (!is_array($this->parsed)) {
-            return null;
-        }
         if (!array_key_exists('ThirdQuartile', $this->parsed)) {
             return null;
         }
@@ -168,9 +165,6 @@ class Analyzer
      */
     public function getLcl()
     {
-        if (!is_array($this->parsed)) {
-            return null;
-        }
         if (!array_key_exists('FirstQuartile', $this->parsed)) {
             return null;
         }
@@ -186,9 +180,6 @@ class Analyzer
      */
     public function getOutliers()
     {
-        if (!is_array($this->parsed)) {
-            return null;
-        }
         if (!array_key_exists('data', $this->parsed)) {
             return null;
         }

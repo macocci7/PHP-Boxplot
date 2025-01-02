@@ -11,7 +11,7 @@ trait AttributeTrait
     /**
      * @var string[]    $labels
      */
-    protected array $labels;
+    protected array $labels = [];
     protected string $labelX;
     protected string $labelY;
     protected string $caption;
