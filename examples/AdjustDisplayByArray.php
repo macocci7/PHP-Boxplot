@@ -50,4 +50,4 @@ $conf = [
 
 $bp = new Boxplot();
 $bp->config($conf)
-   ->create('img/AdjustDisplayByArray.png');
+   ->create(__DIR__ . '/img/AdjustDisplayByArray.png');

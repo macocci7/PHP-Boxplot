@@ -89,7 +89,7 @@ composer require macocci7/php-boxplot
     $bp = new Boxplot();
 
     $bp->setData($data)
-       ->create('img/BasicUsage.png');
+       ->create(__DIR__ . '/img/BasicUsage.png');
     ```
 - Result:
 
@@ -148,7 +148,7 @@ And Setting Caption can be done as follows:
        ->labelY('Score')
        ->caption('Achievement Test Results in 2023')
        ->legends(['Donald Biden'])
-       ->create('img/AdjustDisplayByMethods.png');
+       ->create(__DIR__ . '/img/AdjustDisplayByMethods.png');
     ```
 
 - Result:
@@ -245,7 +245,7 @@ Multiple datasets can be displayed side by side at the same time.
        ->labelX('Achievement Test')
        ->labelY('Score')
        ->caption('Achievement Test Results in 2023')
-       ->create('img/MultipleDataSet.png');
+       ->create(__DIR__ . '/img/MultipleDataSet.png');
     ```
 
 - Result: [examples/img/MultipleDataSet.png](examples/img/MultipleDataSet.png)
@@ -380,8 +380,8 @@ Second, Code PHP like this:
     use Macocci7\PhpBoxplot\Boxplot;
 
     $bp = new Boxplot();
-    $bp->config('AdjustDisplayByNeon.neon')
-       ->create('img/AdjustDisplayByNeon.png');
+    $bp->config(__DIR__ . '/AdjustDisplayByNeon.neon')
+       ->create(__DIR__ . '/img/AdjustDisplayByNeon.png');
     ```
 
 Then, run the PHP Code.
@@ -449,7 +449,7 @@ You can Adjust the Display by using Array.
 
     $bp = new Boxplot();
     $bp->config($conf)
-       ->create('img/AdjustDisplayByArray.png');
+       ->create(__DIR__ . '/img/AdjustDisplayByArray.png');
     ```
 
 - Result: [examples/img/AdjustDisplayByArray.png](examples/img/AdjustDisplayByArray.png)
@@ -492,7 +492,7 @@ You can set transparent background like this.
        ->labelX('Examination')
        ->labelY('Score')
        ->caption('Transparent Background')
-       ->create('img/TransparentBackground.png');
+       ->create(__DIR__ . '/img/TransparentBackground.png');
     ```
 
 - Result: [examples/img/TransparentBackground.png](examples/img/TransparentBackground.png)
@@ -548,4 +548,4 @@ You can set transparent background like this.
 
 ***
 
-Copyright 2023 - 2025 macocci7
+Copyright 2023 - 2026 macocci7

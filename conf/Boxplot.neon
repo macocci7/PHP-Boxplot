@@ -44,8 +44,6 @@ validConfig:
         type: colorCode|null
     whiskerWidth:
         type: int
-    fontPath:
-        type: string
     fontSize:
         type: number
     fontColor:
