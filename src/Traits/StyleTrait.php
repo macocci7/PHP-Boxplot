@@ -19,7 +19,7 @@ trait StyleTrait
      * @var string[]    $boxBackgroundColors
      */
     protected array $boxBackgroundColors;
-    protected string $fontPath;
+    protected string $fontPath = __DIR__ . '/../Fonts/ipaexg.ttf';
     protected int|float $fontSize;
     protected int $outlierDiameter;
     protected string|null $outlierColor;

@@ -27,4 +27,4 @@ $bp->setData($data)
    ->labelX('Examination')
    ->labelY('Score')
    ->caption('Transparent Background')
-   ->create('img/TransparentBackground.png');
+   ->create(__DIR__ . '/img/TransparentBackground.png');

@@ -26,4 +26,4 @@ $bp->setData($data)
    ->labelY('Score')
    ->caption('Achievement Test Results in 2023')
    ->legends(['Donald Biden'])
-   ->create('img/AdjustDisplayByMethods.png');
+   ->create(__DIR__ . '/img/AdjustDisplayByMethods.png');

@@ -6,7 +6,7 @@ use Macocci7\PhpBoxplot\Boxplot;
 
 $faker = Faker\Factory::create();
 $bp = new Boxplot();
-$filePath = 'img/BoxplotExampleCase.png';
+$filePath = __DIR__ . '/img/BoxplotExampleCase.png';
 
 $keys = [
     '5/21',

@@ -21,7 +21,7 @@ boxBorderColor: '#3333cc'
 boxBorderWidth: 1
 whiskerColor: '#3333cc'
 whiskerWidth: 1
-fontPath: 'fonts/ipaexg.ttf' # IPA ex Gothic 00401
+#fontPath: 'fonts/ipaexg.ttf' # IPA ex Gothic 00401
 #fontPath: 'fonts/ipaexm.ttf' # IPA ex Mincho 00401
 fontSize: 16
 fontColor: '#333333'
@@ -93,8 +93,6 @@ validConfig:
         type: colorCode|null
     whiskerWidth:
         type: int
-    fontPath:
-        type: string
     fontSize:
         type: int|float
     fontColor:

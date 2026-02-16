@@ -15,4 +15,4 @@ $data = [
 $bp = new Boxplot();
 
 $bp->setData($data)
-   ->create('img/BasicUsage.png');
+   ->create(__DIR__ . '/img/BasicUsage.png');

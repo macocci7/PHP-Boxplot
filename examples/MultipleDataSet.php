@@ -38,4 +38,4 @@ $bp->setDataset($dataSet)
    ->labelX('Achievement Test')
    ->labelY('Score')
    ->caption('Achievement Test Results in 2023')
-   ->create('img/MultipleDataSet.png');
+   ->create(__DIR__ . '/img/MultipleDataSet.png');
