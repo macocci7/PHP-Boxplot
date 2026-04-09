@@ -58,9 +58,8 @@ class Plotter extends Analyzer
 
     /**
      * loads config.
-     * @return  void
      */
-    private function loadConf()
+    private function loadConf(): void
     {
         Config::load();
         foreach (array_keys(Config::get('validConfig')) as $prop) {
@@ -70,9 +69,8 @@ class Plotter extends Analyzer
 
     /**
      * sets properties
-     * @return  self
      */
-    private function setProperties()
+    private function setProperties(): self
     {
         $this->legendCount = count($this->dataSet);
         if (!$this->boxBackgroundColors) {
@@ -178,8 +176,6 @@ class Plotter extends Analyzer
 
     /**
      * adjusts gridHeightPitch
-     *
-     * @param   float   $gridHeightSpan
      */
     private function adjustGridHeightPitch(float $gridHeightSpan): void
     {
@@ -219,9 +215,8 @@ class Plotter extends Analyzer
 
     /**
      * plots axis
-     * @return  self
      */
-    private function plotAxis()
+    private function plotAxis(): self
     {
         if (!$this->showAxis) {
             return $this;
@@ -257,9 +252,8 @@ class Plotter extends Analyzer
 
     /**
      * plots grids
-     * @return  self
      */
-    private function plotGrids()
+    private function plotGrids(): self
     {
         $this->plotGridHorizontal();
         $this->plotGridVertical();
@@ -268,9 +262,8 @@ class Plotter extends Analyzer
 
     /**
      * plots horizontal grids
-     * @return  self
      */
-    private function plotGridHorizontal()
+    private function plotGridHorizontal(): self
     {
         [$offsetX, $offsetY] = $this->plotarea['offset'];
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
@@ -292,9 +285,8 @@ class Plotter extends Analyzer
 
     /**
      * plots vertical grid
-     * @return  self
      */
-    private function plotGridVertical()
+    private function plotGridVertical(): self
     {
         if (!$this->gridVertical) {
             return $this;
@@ -321,9 +313,8 @@ class Plotter extends Analyzer
 
     /**
      * plots grid values
-     * @return  self
      */
-    private function plotGridValues()
+    private function plotGridValues(): self
     {
         [$offsetX, $offsetY] = $this->plotarea['offset'];
         for ($y = $this->gridMin; $y <= $this->gridMax; $y += $this->gridHeightPitch) {
@@ -344,11 +335,8 @@ class Plotter extends Analyzer
 
     /**
      * plots a box
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotBox(int $index, int $legend)
+    private function plotBox(int $index, int $legend): self
     {
         [$offsetX, $offsetY] = $this->plotarea['offset'];
         $rateX = $this->transformer->getRateX();
@@ -373,11 +361,8 @@ class Plotter extends Analyzer
 
     /**
      * plots meadian
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotMedian(int $index, int $legend)
+    private function plotMedian(int $index, int $legend): self
     {
         [$offsetX, $offsetY] = $this->plotarea['offset'];
         $legends = $this->legendCount;
@@ -401,11 +386,8 @@ class Plotter extends Analyzer
 
     /**
      * plots mean
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotMean(int $index, int $legend)
+    private function plotMean(int $index, int $legend): self
     {
         if (!$this->mean) {
             return $this;
@@ -433,11 +415,8 @@ class Plotter extends Analyzer
 
     /**
      * plot an upper whisker
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotWhiskerUpper(int $index, int $legend)
+    private function plotWhiskerUpper(int $index, int $legend): self
     {
         // upper whisker
         [$offsetX, $offsetY] = $this->plotarea['offset'];
@@ -489,11 +468,8 @@ class Plotter extends Analyzer
 
     /**
      * plots a lower whisker
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotWhiskerLower(int $index, int $legend)
+    private function plotWhiskerLower(int $index, int $legend): self
     {
         // lower whisker
         [$offsetX, $offsetY] = $this->plotarea['offset'];
@@ -545,11 +521,8 @@ class Plotter extends Analyzer
 
     /**
      * plots whiskers
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotWhisker(int $index, int $legend)
+    private function plotWhisker(int $index, int $legend): self
     {
         $this->plotWhiskerUpper($index, $legend);
         $this->plotWhiskerLower($index, $legend);
@@ -558,11 +531,8 @@ class Plotter extends Analyzer
 
     /**
      * plots outliers
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotOutliers(int $index, int $legend)
+    private function plotOutliers(int $index, int $legend): self
     {
         if (!$this->outlier) {
             return $this;
@@ -589,11 +559,8 @@ class Plotter extends Analyzer
 
     /**
      * plots jitter
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plotJitter(int $index, int $legend)
+    private function plotJitter(int $index, int $legend): self
     {
         if (!$this->jitter) {
             return $this;
@@ -630,9 +597,8 @@ class Plotter extends Analyzer
 
     /**
      * plots labels
-     * @return  self
      */
-    private function plotLabels()
+    private function plotLabels(): self
     {
         if (empty($this->labels)) {
             return $this;
@@ -663,9 +629,8 @@ class Plotter extends Analyzer
 
     /**
      * plots label of X
-     * @return  self
      */
-    private function plotLabelX()
+    private function plotLabelX(): self
     {
         $coord = $this->transformer->getCoord(0, 0);
         $offset = $this->plotarea['offset'];
@@ -687,9 +652,8 @@ class Plotter extends Analyzer
 
     /**
      * plots label of Y
-     * @return  self
      */
-    private function plotLabelY()
+    private function plotLabelY(): self
     {
         $width = $this->canvasHeight;
         $height = (int) ($this->canvasWidth * (1 - $this->frameXRatio) / 3);
@@ -713,9 +677,8 @@ class Plotter extends Analyzer
 
     /**
      * plots caption
-     * @return  self
      */
-    private function plotCaption()
+    private function plotCaption(): self
     {
         $x = (int) ($this->canvasWidth / 2);
         $y = (int) ($this->canvasHeight * (1 - $this->frameYRatio) / 3);
@@ -734,9 +697,8 @@ class Plotter extends Analyzer
 
     /**
      * plots a legend
-     * @return  self
      */
-    private function plotLegend()
+    private function plotLegend(): self
     {
         if (!$this->legend) {
             return $this;
@@ -793,11 +755,8 @@ class Plotter extends Analyzer
 
     /**
      * plots stuffs
-     * @param   int $index
-     * @param   int $legend
-     * @return  self
      */
-    private function plot(int $index, int $legend)
+    private function plot(int $index, int $legend): self
     {
         $this->plotBox($index, $legend);
         $this->plotMedian($index, $legend);
@@ -810,11 +769,9 @@ class Plotter extends Analyzer
 
     /**
      * creates boxplots
-     * @param   string  $filePath
-     * @return  self
      * @thrown  \Exception
      */
-    public function create(string $filePath)
+    public function create(string $filePath): self
     {
         if (strlen($filePath) === 0) {
             throw new \Exception("empty string specified for file path.");

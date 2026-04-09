@@ -18,12 +18,9 @@ trait AttributeTrait
 
     /**
      * resizes width and height
-     * @param   int $width
-     * @param   int $height
-     * @return  self
      * @thrown  \Exception
      */
-    public function resize(int $width, int $height)
+    public function resize(int $width, int $height): self
     {
         if ($width < $this->CANVAS_WIDTH_LIMIT_LOWER) {
             throw new \Exception(
@@ -45,9 +42,8 @@ trait AttributeTrait
     /**
      * sets labels
      * @param   array<int|string, int|string>   $labels
-     * @return  self
      */
-    public function labels(array $labels)
+    public function labels(array $labels): self
     {
         $this->labels = [];
         foreach ($labels as $label) {
@@ -58,10 +54,8 @@ trait AttributeTrait
 
     /**
      * sets the label of X
-     * @param   string  $label
-     * @return  self
      */
-    public function labelX(string $label)
+    public function labelX(string $label): self
     {
         $this->labelX = $label;
         return $this;
@@ -69,10 +63,8 @@ trait AttributeTrait
 
     /**
      * sets the label of Y
-     * @param   string  $label
-     * @return  self
      */
-    public function labelY(string $label)
+    public function labelY(string $label): self
     {
         $this->labelY = $label;
         return $this;
@@ -80,10 +72,8 @@ trait AttributeTrait
 
     /**
      * sets the caption
-     * @param   string  $caption
-     * @return  self
      */
-    public function caption(string $caption)
+    public function caption(string $caption): self
     {
         $this->caption = $caption;
         return $this;
@@ -92,9 +82,8 @@ trait AttributeTrait
     /**
      * sets legends
      * @param   string[]    $legends
-     * @return  self
      */
-    public function legends(array $legends)
+    public function legends(array $legends): self
     {
         $this->legends = $legends;
         return $this;

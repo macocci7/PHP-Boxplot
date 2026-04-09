@@ -10,8 +10,8 @@
 
 <table>
 <tr>
-<td><img src="examples/img/BoxplotDetmersReid2023_02.png" width ="300" /></td>
-<td><img src="examples/img/BoxplotDetmersReid2023_01.png" width ="300" /></td>
+<td><img src="examples/img/BoxplotNolanMcLean2025_02.png" width ="300" /></td>
+<td><img src="examples/img/BoxplotNolanMcLean2025_01.png" width ="300" /></td>
 </tr>
 </table>　
 
@@ -43,14 +43,20 @@ Transparent background is also supported.
 
 ## 3. Requirements
 
-- PHP 8.1 or later
+- PHP 8.3 or later
 - Imagick PHP Extension
 
     Check with commands:
     ```bash
-    php -i | grep imagick
+    (php -m; php -i) | grep imagick
     ```
-- Composer
+- Mbstring PHP Extension
+
+    Check with commands:
+    ```bash
+    (php -m; php -i) | grep mbstring
+    ```
+- [Composer](https://getcomposer.org/)
 
 ## 4. Installation
 
@@ -525,15 +531,15 @@ You can set transparent background like this.
 
     <a href="examples/img/TransparentBackground.png" target="_blank"><img src="examples/img/TransparentBackground.png" width="300" /></a>
 
-- [DetmersReidBoxplot2023.php](examples/DetmersReidBoxplot2023.php) >> results in:
+- [NolanMcLeanBoxplot2025.php](examples/NolanMcLeanBoxplot2025.php) >> results in:
 
     <table>
     <tr>
     <td>
-    <a href="examples/img/BoxplotDetmersReid2023_01.png" target="_blank"><img src="examples/img/BoxplotDetmersReid2023_01.png" width="300" /></a>
+    <a href="examples/img/BoxplotNolanMcLean2025_01.png" target="_blank"><img src="examples/img/BoxplotNolanMcLean2025_01.png" width="300" /></a>
     </td>
     <td>
-    <a href="examples/img/BoxplotDetmersReid2023_02.png" target="_blank"><img src="examples/img/BoxplotDetmersReid2023_02.png" width="300" /></a>
+    <a href="examples/img/BoxplotNolanMcLean2025_02.png" target="_blank"><img src="examples/img/BoxplotNolanMcLean2025_02.png" width="300" /></a>
     </td>
     </tr>
     </table>
@@ -545,7 +551,3 @@ You can set transparent background like this.
 ## License
 
 [MIT](LICENSE)
-
-***
-
-Copyright 2023 - 2026 macocci7

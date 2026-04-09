@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Macocci7\PhpBoxplot;
+namespace Macocci7\PhpBoxplot\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBoxplot\Analyzer;
 
-/**
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class AnalyzerTest extends TestCase
 {
     public static function provide_limit_throw_exception_with_invalid_params(): array
@@ -59,7 +55,7 @@ final class AnalyzerTest extends TestCase
             ['data' => [null], 'expect' => null, ],
             ['data' => [true], 'expect' => null, ],
             ['data' => [false], 'expect' => null, ],
-            ['data' => [0], 'expect' => 0, ],
+            ['data' => [0], 'expect' => 0.0, ],
             ['data' => [1.2], 'expect' => 1.2, ],
             ['data' => ['0'], 'expect' => null, ],
             ['data' => ['1.2'], 'expect' => null, ],
@@ -73,8 +69,8 @@ final class AnalyzerTest extends TestCase
     #[DataProvider('provide_getMean_can_get_mean_correctly')]
     public function test_getMean_can_get_mean_correctly(array $data, int|float|null $expect): void
     {
-        $bp = new Boxplot();
-        $this->assertSame($expect, $bp->getMean($data));
+        $a = new Analyzer();
+        $this->assertSame($expect, $a->getMean($data));
     }
 
     public static function provide_getUcl_can_get_ucl_correctly(): array

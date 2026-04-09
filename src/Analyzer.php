@@ -41,9 +41,8 @@ class Analyzer
 
     /**
      * loads config.
-     * @return  void
      */
-    private function loadConf()
+    private function loadConf(): void
     {
         Config::load();
         $props = [
@@ -58,10 +57,8 @@ class Analyzer
      * returns prop:
      * - of the specified key
      * - all configs if param is not specified
-     * @param   string|null $key = null
-     * @return  mixed
      */
-    public function getProp(string|null $key = null)
+    public function getProp(string|null $key = null): mixed
     {
         if (is_null($key)) {
             $config = [];
@@ -78,12 +75,9 @@ class Analyzer
 
     /**
      * sets lower limit and upper limit
-     * @param   int|float   $lower
-     * @param   int|float   $upper
-     * @return  self
      * @thrown  \Exception
      */
-    public function limit(int|float $lower, int|float $upper)
+    public function limit(int|float $lower, int|float $upper): self
     {
         if ($lower >= $upper) {
             throw new \Exception("lower limit must be less than upper limit.");
@@ -96,10 +90,9 @@ class Analyzer
     /**
      * sets data
      * @param   array<int|string, list<int|float>>   $data
-     * @return  self
      * @thrown  \Exception
      */
-    public function setData(array $data)
+    public function setData(array $data): self
     {
         if (!$this->isValidData($data)) {
             throw new \Exception("Invalid data specified. array<int|string, list<int|float>> expected.");
@@ -115,10 +108,9 @@ class Analyzer
     /**
      * sets dataset
      * @param   array<int|string, array<int|string, array<int|string, int|float>>>  $dataset
-     * @return  self
      * @thrown  \Exception
      */
-    public function setDataset(array $dataset)
+    public function setDataset(array $dataset): self
     {
         if (!$this->isValidDataset($dataset)) {
             throw new \Exception(
@@ -134,9 +126,8 @@ class Analyzer
     /**
      * gets mean of $data
      * @param   array<int|string, int|float>    $data
-     * @return  float|null
      */
-    public function getMean(array $data)
+    public function getMean(array $data): ?float
     {
         if (!$this->isNumbersAll($data)) {
             return null;
@@ -146,9 +137,8 @@ class Analyzer
 
     /**
      * gets UCL
-     * @return  float|null
      */
-    public function getUcl()
+    public function getUcl(): ?float
     {
         if (!array_key_exists('ThirdQuartile', $this->parsed)) {
             return null;
@@ -161,9 +151,8 @@ class Analyzer
 
     /**
      * gets LCL
-     * @return  float|null
      */
-    public function getLcl()
+    public function getLcl(): ?float
     {
         if (!array_key_exists('FirstQuartile', $this->parsed)) {
             return null;
@@ -178,7 +167,7 @@ class Analyzer
      * gets outliers
      * @return  list<int|float>|null
      */
-    public function getOutliers()
+    public function getOutliers(): ?array
     {
         if (!array_key_exists('data', $this->parsed)) {
             return null;

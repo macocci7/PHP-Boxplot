@@ -35,10 +35,8 @@ trait StyleTrait
 
     /**
      * sets canvas background color
-     * @param   string  $bgcolor
-     * @return  self
      */
-    public function bgcolor(string $bgcolor)
+    public function bgcolor(string $bgcolor): self
     {
         if (!$this->isColorCode($bgcolor)) {
             throw new \Exception("specify rgb color code.");
@@ -49,10 +47,8 @@ trait StyleTrait
 
     /**
      * sets font color
-     * @param   string  $color
-     * @return  self
      */
-    public function fontColor(string $color)
+    public function fontColor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify rgb color code.");
@@ -63,10 +59,8 @@ trait StyleTrait
 
     /**
      * sets axis color
-     * @param   string  $color
-     * @return  self
      */
-    public function axisColor(string $color)
+    public function axisColor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify rgb color code.");
@@ -77,10 +71,8 @@ trait StyleTrait
 
     /**
      * sets grid color
-     * @param   string  $color
-     * @return  self
      */
-    public function gridColor(string $color)
+    public function gridColor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify rgb color code.");
@@ -91,10 +83,8 @@ trait StyleTrait
 
     /**
      * sets legend background color
-     * @param   string  $color
-     * @return  self
      */
-    public function legendBgcolor(string $color)
+    public function legendBgcolor(string $color): self
     {
         if (!$this->isColorCode($color)) {
             throw new \Exception("specify rgb color code.");
@@ -105,11 +95,8 @@ trait StyleTrait
 
     /**
      * sets attributes of border of boxes
-     * @param   int     $width
-     * @param   string  $color
-     * @return  self
      */
-    public function boxBorder(int $width, string $color)
+    public function boxBorder(int $width, string $color): self
     {
         if ($width < 1) {
             throw new \Exception("specify natural number as width.");
@@ -124,11 +111,8 @@ trait StyleTrait
 
     /**
      * sets attributes of whisker
-     * @param   int     $width
-     * @param   string  $color
-     * @return  self
      */
-    public function whisker(int $width, string $color)
+    public function whisker(int $width, string $color): self
     {
         if ($width < 1) {
             throw new \Exception("specify natural number as width.");
@@ -143,10 +127,8 @@ trait StyleTrait
 
     /**
      * sets height pitch of grid
-     * @param   int|float   $pitch
-     * @return  self
      */
-    public function gridHeightPitch(int|float $pitch)
+    public function gridHeightPitch(int|float $pitch): self
     {
         if ($pitch <= 0) {
             throw new \Exception("specify positive number.");
@@ -157,10 +139,8 @@ trait StyleTrait
 
     /**
      * sets width of boxes
-     * @param   int $width
-     * @return  self
      */
-    public function boxWidth(int $width)
+    public function boxWidth(int $width): self
     {
         if ($width < $this->boxBorderWidth * 2 + 1) {
             throw new \Exception("Box width must be greater than twice of box border width.");
@@ -172,9 +152,8 @@ trait StyleTrait
     /**
      * sets background colors of boxes
      * @param   string[]    $colors
-     * @return  self
      */
-    public function boxBackground(array $colors)
+    public function boxBackground(array $colors): self
     {
         if (!$this->isColorCodeAll($colors)) {
             throw new \Exception("only color codes are acceptable.");

@@ -21,9 +21,8 @@ class Config
 
     /**
      * loads config from a file
-     * @return  void
      */
-    public static function load()
+    public static function load(): void
     {
         $class = self::class();
         $cl = self::className($class);
@@ -33,19 +32,16 @@ class Config
 
     /**
      * returns the fully qualified class name of the caller
-     * @return  string
      */
-    public static function class()
+    public static function class(): string
     {
         return debug_backtrace()[2]['class'];
     }
 
     /**
      * returns just the class name splitted parent namespace
-     * @param   string  $class
-     * @return  string
      */
-    public static function className(string $class)
+    public static function className(string $class): string
     {
         $pos = strrpos($class, '\\');
         if ($pos) {
@@ -56,10 +52,8 @@ class Config
 
     /**
      * returns config data
-     * @param   string  $key = null
-     * @return  mixed
      */
-    public static function get(?string $key = null)
+    public static function get(?string $key = null): mixed
     {
         // get fully qualified class name of the caller
         $class = self::class();
@@ -85,7 +79,7 @@ class Config
      * @param   string|mixed[]  $configResource
      * @return  mixed[]
      */
-    public static function filter(string|array $configResource)
+    public static function filter(string|array $configResource): array
     {
         $class = self::class();
         if (is_string($configResource)) {
@@ -96,12 +90,10 @@ class Config
 
     /**
      * returns valid config items from specified file
-     * @param   string  $path
-     * @param   string  $class
      * @return  mixed[]
      * @thrown  \Exception
      */
-    private static function filterFromFile(string $path, string $class)
+    private static function filterFromFile(string $path, string $class): array
     {
         if (strlen($path) === 0) {
             throw new \Exception("Specify valid filename.");
@@ -116,11 +108,10 @@ class Config
     /**
      * returns valid config items from specified array
      * @param   mixed[] $content
-     * @param   string  $class
      * @return  mixed[]
      * @thrown  \Exception
      */
-    private static function filterFromArray(array $content, string $class)
+    private static function filterFromArray(array $content, string $class): array
     {
         $conf = [];
         $validConfig = self::$conf[$class]['validConfig'];
