@@ -7,7 +7,6 @@ trait JudgeTrait
     /**
      * judges if all items are integer or not
      * @param   array<mixed>    $items
-     * @return  bool
      */
     public static function isIntAll(array $items): bool
     {
@@ -25,7 +24,6 @@ trait JudgeTrait
     /**
      * judges if the param is number
      * @param   mixed   $item
-     * @return  bool
      */
     public static function isNumber(mixed $item): bool
     {
@@ -34,8 +32,6 @@ trait JudgeTrait
 
     /**
      * judges if all items are number or not
-     * @param   mixed   $items
-     * @return  bool
      */
     public static function isNumbersAll(mixed $items): bool
     {
@@ -55,8 +51,6 @@ trait JudgeTrait
 
     /**
      * judges if the param is in '#rrggbb' format or not
-     * @param   mixed  $item
-     * @return  bool
      */
     public static function isColorCode(mixed $item): bool
     {
@@ -69,9 +63,8 @@ trait JudgeTrait
     /**
      * judges if all of params are colorcode or not
      * @param   string[]    $colors
-     * @return  bool
      */
-    public static function isColorCodeAll(array $colors)
+    public static function isColorCodeAll(array $colors): bool
     {
         if (empty($colors)) {
             return false;
@@ -86,11 +79,8 @@ trait JudgeTrait
 
     /**
      * judges if type of $input is valid or not
-     * @param   mixed   $input
-     * @param   string  $defs
-     * @return  bool
      */
-    public static function isValidType(mixed $input, string $defs)
+    public static function isValidType(mixed $input, string $defs): bool
     {
         $r = false;
         foreach (explode('|', $defs) as $def) {
@@ -111,10 +101,8 @@ trait JudgeTrait
 
     /**
      * judges if the data is valid or not
-     * @param   mixed   $data
-     * @return  bool
      */
-    public static function isValidData(mixed $data)
+    public static function isValidData(mixed $data): bool
     {
         if (!is_array($data)) {
             return false;
@@ -132,10 +120,8 @@ trait JudgeTrait
 
     /**
      * judges if the dataset is valid or not
-     * @param   mixed   $dataset
-     * @return  bool
      */
-    public static function isValidDataset(mixed $dataset)
+    public static function isValidDataset(mixed $dataset): bool
     {
         if (!is_array($dataset)) {
             return false;

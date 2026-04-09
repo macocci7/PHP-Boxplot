@@ -2,17 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Macocci7\PhpBoxplot\Traits;
+namespace Macocci7\PhpBoxplot\Tests\Traits;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBoxplot\Traits\JudgeTrait;
 use Nette\Neon\Neon;
 
-/**
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class JudgeTraitTest extends TestCase
 {
     use JudgeTrait;

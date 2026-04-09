@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Macocci7\PhpBoplot\Helpers;
+namespace Macocci7\PhpBoxplot\Tests\Helpers;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Macocci7\PhpBoxplot\Helpers\Config;
 use Nette\Neon\Neon;
 
-/**
- * @SuppressWarnings(PHPMD.CamelCaseMethodName)
- */
 final class ConfigTest extends TestCase
 {
     // phpcs:disable PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -51,7 +48,7 @@ final class ConfigTest extends TestCase
     public static function provide_className_can_return_class_name_correctly(): array
     {
         return [
-            "Fully Qualified" => [ 'class' => '\Macocci7\PhpHistogram\Helper\ConfigTest', 'expect' => 'ConfigTest', ],
+            "Fully Qualified" => [ 'class' => '\Macocci7\PhpBoxplot\Helper\ConfigTest', 'expect' => 'ConfigTest', ],
             "Relative" => [ 'class' => 'Helper\ConfigTest', 'expect' => 'ConfigTest', ],
             "Only Class Name" => [ 'class' => 'ConfigTest', 'expect' => 'ConfigTest', ],
         ];

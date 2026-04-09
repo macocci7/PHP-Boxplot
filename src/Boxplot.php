@@ -26,9 +26,8 @@ class Boxplot extends Plotter
 
     /**
      * loads config.
-     * @return  void
      */
-    private function loadConf()
+    private function loadConf(): void
     {
         Config::load();
         $props = [
@@ -43,9 +42,8 @@ class Boxplot extends Plotter
     /**
      * set config from specified resource
      * @param   string|mixed[]  $configResource
-     * @return  self
      */
-    public function config(string|array $configResource)
+    public function config(string|array $configResource): self
     {
         foreach (Config::filter($configResource) as $key => $value) {
             $this->{$key} = $value;

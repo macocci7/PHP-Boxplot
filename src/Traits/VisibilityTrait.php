@@ -13,9 +13,8 @@ trait VisibilityTrait
 
     /**
      * sets vertical grids on
-     * @return  self
      */
-    public function gridVerticalOn()
+    public function gridVerticalOn(): self
     {
         $this->gridVertical = true;
         return $this;
@@ -23,9 +22,8 @@ trait VisibilityTrait
 
     /**
      * sets vertical grids off
-     * @return  self
      */
-    public function gridVerticalOff()
+    public function gridVerticalOff(): self
     {
         $this->gridVertical = false;
         return $this;
@@ -33,9 +31,8 @@ trait VisibilityTrait
 
     /**
      * sets detecting outliers on
-     * @return  self
      */
-    public function outlierOn()
+    public function outlierOn(): self
     {
         $this->outlier = true;
         return $this;
@@ -43,9 +40,8 @@ trait VisibilityTrait
 
     /**
      * sets detecting outliers off
-     * @return  self
      */
-    public function outlierOff()
+    public function outlierOff(): self
     {
         $this->outlier = false;
         return $this;
@@ -53,9 +49,8 @@ trait VisibilityTrait
 
     /**
      * sets jitter plotting on
-     * @return  self
      */
-    public function jitterOn()
+    public function jitterOn(): self
     {
         $this->jitter = true;
         return $this;
@@ -63,9 +58,8 @@ trait VisibilityTrait
 
     /**
      * sets jitter plotting off
-     * @return  self
      */
-    public function jitterOff()
+    public function jitterOff(): self
     {
         $this->jitter = false;
         return $this;
@@ -73,9 +67,8 @@ trait VisibilityTrait
 
     /**
      * sets plotting means on
-     * @return  self
      */
-    public function meanOn()
+    public function meanOn(): self
     {
         $this->mean = true;
         return $this;
@@ -83,9 +76,8 @@ trait VisibilityTrait
 
     /**
      * sets plotting means off
-     * @return  self
      */
-    public function meanOff()
+    public function meanOff(): self
     {
         $this->mean = false;
         return $this;
@@ -93,9 +85,8 @@ trait VisibilityTrait
 
     /**
      * sets showing legends on
-     * @return  self
      */
-    public function legendOn()
+    public function legendOn(): self
     {
         $this->legend = true;
         return $this;
@@ -103,9 +94,8 @@ trait VisibilityTrait
 
     /**
      * sets showing legends off
-     * @return  self
      */
-    public function legendOff()
+    public function legendOff(): self
     {
         $this->legend = false;
         return $this;
